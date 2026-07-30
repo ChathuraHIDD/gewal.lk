@@ -88,7 +88,146 @@ body {
     );
   }
 
+  .section {html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-main);
+}
+
+* {
+  font-family: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--primary-200);
+  color: var(--primary-900);
+}
+
+.app {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  width: min(
+    calc(100% - 40px),
+    var(--container-width)
+  );
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: 88px;
+}
+
+.section--soft {
+  background: var(--surface-soft);
+}
+
+.heading-xl {
+  max-width: 780px;
+  font-size: clamp(2.5rem, 6vw, 5.4rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.heading-lg {
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.heading-md {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.text-gradient {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  outline: none;
+}
+
+button {
+  font-family: var(--font-main);
+}
+
+input,
+textarea,
+select {
+  color: var(--text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.focus-ring:focus-visible {
+  outline: 3px solid rgba(156, 79, 222, 0.25);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(
+      calc(100% - 28px),
+      var(--container-width)
+    );
+  }
+
   .section {
+    padding-block: 64px;
+  }
+}
     padding-block: 64px;
   }
 }

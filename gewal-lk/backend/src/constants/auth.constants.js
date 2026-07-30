@@ -22,6 +22,13 @@ export const AUTH_PROVIDERS = Object.freeze({
   APPLE: "apple",
 });
 
+export const OTP_TYPES = Object.freeze({
+  EMAIL_VERIFICATION: "email_verification",
+  PASSWORD_RESET: "password_reset",
+  EMAIL_CHANGE: "email_change",
+  PHONE_VERIFICATION: "phone_verification",
+});
+
 export const TOKEN_TYPES = Object.freeze({
   ACCESS: "access",
   REFRESH: "refresh",

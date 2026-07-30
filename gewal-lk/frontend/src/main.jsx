@@ -9,6 +9,7 @@ import "./styles/variables.css";
 import "./styles/reset.css";
 import "./styles/globals.css";
 import "./styles/animations.css";
+import "./styles/auth.css";
 
 createRoot(
   document.getElementById("root")

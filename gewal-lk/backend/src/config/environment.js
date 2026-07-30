@@ -71,6 +71,57 @@ export const environment = Object.freeze({
       "30d",
   },
 
+  email: {
+    enabled:
+      process.env.EMAIL_ENABLED === "true",
+
+    showOtpInDevelopment:
+      process.env.SHOW_OTP_IN_DEVELOPMENT ===
+      "true",
+
+    smtpHost:
+      process.env.SMTP_HOST || "",
+
+    smtpPort: parseNumber(
+      process.env.SMTP_PORT,
+      587
+    ),
+
+    smtpSecure:
+      process.env.SMTP_SECURE === "true",
+
+    smtpUser:
+      process.env.SMTP_USER || "",
+
+    smtpPass:
+      process.env.SMTP_PASS || "",
+
+    fromName:
+      process.env.EMAIL_FROM_NAME ||
+      "Gewal.lk",
+
+    fromAddress:
+      process.env.EMAIL_FROM_ADDRESS ||
+      "no-reply@gewal.lk",
+  },
+
+  otp: {
+    expiresMinutes: parseNumber(
+      process.env.OTP_EXPIRES_MINUTES,
+      10
+    ),
+
+    resendCooldownSeconds: parseNumber(
+      process.env.OTP_RESEND_COOLDOWN_SECONDS,
+      60
+    ),
+
+    maxAttempts: parseNumber(
+      process.env.OTP_MAX_ATTEMPTS,
+      5
+    ),
+  },
+
   rateLimit: {
     windowMs: parseNumber(
       process.env.RATE_LIMIT_WINDOW_MS,

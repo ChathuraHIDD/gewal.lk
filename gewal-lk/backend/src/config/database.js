@@ -1,36 +1,30 @@
 import mongoose from "mongoose";
-import { environment } from "./environment.js";
 
-const databaseOptions = {
-  autoIndex: !environment.isProduction,
-};
+import { environment } from "./environment.js";
 
 export const connectDatabase = async () => {
   try {
     const connection = await mongoose.connect(
       environment.mongoUri,
-      databaseOptions
+      {
+        autoIndex: !environment.isProduction,
+      }
     );
 
+    console.log("MongoDB connected successfully");
     console.log(
-      `MongoDB connected successfully: ${connection.connection.host}`
+      `MongoDB host: ${connection.connection.host}`
+    );
+    console.log(
+      `Database name: ${connection.connection.name}`
     );
 
     return connection;
   } catch (error) {
-    console.error("MongoDB connection failed:", error.message);
-
-    throw error;
-  }
-};
-
-export const disconnectDatabase = async () => {
-  try {
-    await mongoose.disconnect();
-
-    console.log("MongoDB disconnected successfully");
-  } catch (error) {
-    console.error("MongoDB disconnection failed:", error.message);
+    console.error(
+      "MongoDB connection failed:",
+      error.message
+    );
 
     throw error;
   }

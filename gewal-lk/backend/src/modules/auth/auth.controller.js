@@ -294,6 +294,19 @@ export const logoutAll = asyncHandler(
 export const getCurrentUser =
   asyncHandler(
     async (request, response) => {
+      if (!request.user) {
+        return response.status(200).json(
+          new ApiResponse({
+            statusCode: 200,
+            message: "No authenticated user",
+            data: {
+              user: null,
+              isAuthenticated: false,
+            },
+          })
+        );
+      }
+
       const user = await User.findById(
         request.user._id
       );
@@ -314,6 +327,7 @@ export const getCurrentUser =
             "Current user retrieved successfully",
           data: {
             user,
+            isAuthenticated: true,
           },
         })
       );

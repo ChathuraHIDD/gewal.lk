@@ -32,8 +32,10 @@ export function AuthProvider({ children }) {
         const result =
           await getCurrentUser();
 
-        setUser(result.data.user);
-        setIsAuthenticated(true);
+        const currentUser = result.data.user;
+
+        setUser(currentUser);
+        setIsAuthenticated(Boolean(currentUser));
       } catch {
         setUser(null);
         setIsAuthenticated(false);

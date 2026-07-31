@@ -25,11 +25,44 @@ const extractAccessToken = (request) => {
   return null;
 };
 
+const attachAuthenticatedUser = async (request) => {
+  const token = extractAccessToken(request);
+
+  if (!token) {
+    return false;
+  }
+
+  const payload = verifyAccessToken(token);
+
+  const user = await User.findById(payload.sub);
+
+  if (!user || user.deletedAt) {
+    throw new ApiError({
+      statusCode: 401,
+      message: "User account no longer exists",
+      code: "USER_NOT_FOUND",
+    });
+  }
+
+  if (user.accountStatus !== ACCOUNT_STATUSES.ACTIVE) {
+    throw new ApiError({
+      statusCode: 403,
+      message: "Your account is not active",
+      code: "ACCOUNT_NOT_ACTIVE",
+    });
+  }
+
+  request.user = user;
+  request.auth = payload;
+
+  return true;
+};
+
 export const authenticate = asyncHandler(
   async (request, response, next) => {
-    const token = extractAccessToken(request);
+    const isAuthenticated = await attachAuthenticatedUser(request);
 
-    if (!token) {
+    if (!isAuthenticated) {
       throw new ApiError({
         statusCode: 401,
         message: "Authentication is required",
@@ -37,28 +70,18 @@ export const authenticate = asyncHandler(
       });
     }
 
-    const payload = verifyAccessToken(token);
+    return next();
+  }
+);
 
-    const user = await User.findById(payload.sub);
-
-    if (!user || user.deletedAt) {
-      throw new ApiError({
-        statusCode: 401,
-        message: "User account no longer exists",
-        code: "USER_NOT_FOUND",
-      });
+export const optionalAuthenticate = asyncHandler(
+  async (request, response, next) => {
+    try {
+      await attachAuthenticatedUser(request);
+    } catch {
+      request.user = null;
+      request.auth = null;
     }
-
-    if (user.accountStatus !== ACCOUNT_STATUSES.ACTIVE) {
-      throw new ApiError({
-        statusCode: 403,
-        message: "Your account is not active",
-        code: "ACCOUNT_NOT_ACTIVE",
-      });
-    }
-
-    request.user = user;
-    request.auth = payload;
 
     return next();
   }

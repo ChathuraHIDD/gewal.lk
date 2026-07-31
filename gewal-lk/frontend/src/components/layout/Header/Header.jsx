@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
-  Heart,
-  LogIn,
   Menu,
-  Plus,
   UserRound,
   X,
 } from "lucide-react";
@@ -15,26 +12,13 @@ import fullLogo from "../../../assets/logos/gewal-full-logo.png";
 import "./Header.css";
 
 const navigationItems = [
-  {
-    label: "Home",
-    path: "/",
-  },
-  {
-    label: "Properties",
-    path: "/properties",
-  },
-  {
-    label: "Vehicles",
-    path: "/vehicles",
-  },
-  {
-    label: "Marketplace",
-    path: "/marketplace",
-  },
-  {
-    label: "Agents",
-    path: "/agents",
-  },
+  { label: "Home", path: "/" },
+  { label: "Buy", path: "/buy" },
+  { label: "Sell", path: "/sell" },
+  { label: "Rent", path: "/rent" },
+  { label: "Agents", path: "/agents" },
+  { label: "Properties", path: "/properties" },
+  { label: "Contact", path: "/contact" },
 ];
 
 function Header() {
@@ -77,27 +61,10 @@ function Header() {
 
         <div className="header__actions">
           <Link
-            to="/favourites"
-            className="header__icon-button"
-            aria-label="View favourites"
-          >
-            <Heart size={20} />
-          </Link>
-
-          <Link
-            to="/login"
-            className="header__login"
-          >
-            <LogIn size={18} />
-            <span>Login</span>
-          </Link>
-
-          <Link
-            to="/post-ad"
+            to="/register"
             className="header__post-button"
           >
-            <Plus size={18} />
-            <span>Post an Ad</span>
+            <span>Get Started</span>
           </Link>
         </div>
 
@@ -164,16 +131,15 @@ function Header() {
                   className="header__mobile-login"
                 >
                   <UserRound size={19} />
-                  Login or Register
+                  Login
                 </Link>
 
                 <Link
-                  to="/post-ad"
+                  to="/register"
                   onClick={closeMobileMenu}
                   className="header__post-button"
                 >
-                  <Plus size={18} />
-                  Post an Ad
+                  Get Started
                 </Link>
               </div>
             </div>

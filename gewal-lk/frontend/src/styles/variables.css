@@ -4,9 +4,9 @@
   --primary-200: #e6d2fb;
   --primary-300: #d1a8f5;
   --primary-400: #b875ec;
-  --primary-500: #9c4fde;
-  --primary-600: #8737c8;
-  --primary-700: #7029a7;
+  --primary-500: #8b5cf6;
+  --primary-600: #7c3aed;
+  --primary-700: #6d28d9;
   --primary-800: #592283;
   --primary-900: #451a66;
 
@@ -30,9 +30,9 @@
 
   --gradient-primary: linear-gradient(
     135deg,
-    #7430b8 0%,
-    #9c4fde 52%,
-    #be73ef 100%
+    #6d28d9 0%,
+    #9333ea 52%,
+    #c084fc 100%
   );
 
   --gradient-auth: linear-gradient(
@@ -70,8 +70,19 @@
 
   --font-main:
     Inter,
+    Manrope,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+
+  --font-primary: var(--font-main);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-primary-200: var(--primary-200);
+  --color-primary-900: var(--primary-900);
+  --color-border: var(--border);
 }

@@ -15,15 +15,15 @@ import "./AuthLayout.css";
 const featureItems = [
   {
     icon: Building2,
-    text: "Discover properties and lands",
+    text: "Premium verified properties",
   },
   {
     icon: CarFront,
-    text: "Browse vehicles across Sri Lanka",
+    text: "Trusted island-wide marketplace",
   },
   {
     icon: ShieldCheck,
-    text: "Connect with trusted sellers",
+    text: "Safe accounts and secure access",
   },
 ];
 
@@ -89,14 +89,11 @@ function AuthLayout({
             </p>
 
             <h2>
-              Find, sell and connect
-              with confidence.
+              Step into a smarter way to find home.
             </h2>
 
             <p className="auth-layout__visual-description">
-              One trusted platform for properties,
-              lands, vehicles and marketplace
-              listings.
+              Access premium listings, trusted agents and a secure Sri Lankan real estate experience.
             </p>
           </motion.div>
 

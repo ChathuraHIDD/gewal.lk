@@ -6,6 +6,7 @@ import {
 
 import Header from "./components/layout/Header/Header.jsx";
 import HomePage from "./pages/public/HomePage/HomePage.jsx";
+import PropertiesPage from "./pages/public/PropertiesPage/PropertiesPage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -37,6 +38,11 @@ function App() {
         <Route
           path="/"
           element={<HomePage />}
+        />
+
+        <Route
+          path="/properties"
+          element={<PropertiesPage />}
         />
 
         <Route

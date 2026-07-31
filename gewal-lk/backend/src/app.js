@@ -25,9 +25,26 @@ app.use(
   })
 );
 
+const allowedCorsOrigins = new Set(environment.frontendUrls);
+
+const isAllowedDevelopmentOrigin = (origin) =>
+  environment.isDevelopment &&
+  /^http:\/\/localhost:\d+$/.test(origin);
+
 app.use(
   cors({
-    origin: environment.frontendUrl,
+    origin(origin, callback) {
+      if (
+        !origin ||
+        allowedCorsOrigins.has(origin) ||
+        isAllowedDevelopmentOrigin(origin)
+      ) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     credentials: true,
     methods: [
       "GET",

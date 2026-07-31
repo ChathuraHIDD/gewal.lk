@@ -1,6 +1,11 @@
+import dns from "node:dns";
 import mongoose from "mongoose";
 
 import { environment } from "./environment.js";
+
+if (environment.dnsServers.length > 0) {
+  dns.setServers(environment.dnsServers);
+}
 
 export const connectDatabase = async () => {
   try {
@@ -8,6 +13,7 @@ export const connectDatabase = async () => {
       environment.mongoUri,
       {
         autoIndex: !environment.isProduction,
+        serverSelectionTimeoutMS: 10000,
       }
     );
 
@@ -21,6 +27,15 @@ export const connectDatabase = async () => {
 
     return connection;
   } catch (error) {
+    if (environment.isDevelopment) {
+      console.warn(
+        "MongoDB connection failed. Continuing without a database in development mode.",
+        error.message
+      );
+
+      return null;
+    }
+
     console.error(
       "MongoDB connection failed:",
       error.message

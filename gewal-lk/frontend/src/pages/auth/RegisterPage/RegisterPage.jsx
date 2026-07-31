@@ -29,6 +29,9 @@ function RegisterPage() {
   const [formData, setFormData] =
     useState(initialFormData);
 
+  const [currentStep, setCurrentStep] =
+    useState(1);
+
   const [showPassword, setShowPassword] =
     useState(false);
 
@@ -54,6 +57,25 @@ function RegisterPage() {
           ? checked
           : value,
     }));
+  };
+
+  const goToStepTwo = (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+
+    if (
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.email.trim()
+    ) {
+      setErrorMessage(
+        "Please complete your name and email address."
+      );
+
+      return;
+    }
+
+    setCurrentStep(2);
   };
 
   const handleSubmit = async (event) => {
@@ -120,18 +142,46 @@ function RegisterPage() {
   return (
     <AuthLayout
       title="Create your account"
-      description="Join Gewal.lk and start discovering, selling and connecting."
+      description={
+        currentStep === 1
+          ? "Step 1 of 2 — Tell us who you are."
+          : "Step 2 of 2 — Secure your account."
+      }
     >
       <form
         className="auth-form"
-        onSubmit={handleSubmit}
+        onSubmit={
+          currentStep === 1
+            ? goToStepTwo
+            : handleSubmit
+        }
       >
+        <div className="auth-steps" aria-label="Registration progress">
+          <span className="auth-steps__item auth-steps__item--active">
+            1
+          </span>
+          <span className={
+            currentStep === 2
+              ? "auth-steps__line auth-steps__line--active"
+              : "auth-steps__line"
+          } />
+          <span className={
+            currentStep === 2
+              ? "auth-steps__item auth-steps__item--active"
+              : "auth-steps__item"
+          }>
+            2
+          </span>
+        </div>
+
         {errorMessage && (
           <div className="auth-alert auth-alert--error">
             {errorMessage}
           </div>
         )}
 
+        {currentStep === 1 ? (
+          <>
         <div className="auth-form__row">
           <div className="auth-field">
             <label htmlFor="firstName">
@@ -217,6 +267,16 @@ function RegisterPage() {
           </div>
         </div>
 
+        <button
+          className="auth-form__button"
+          type="button"
+          onClick={goToStepTwo}
+        >
+          Continue to part 2
+        </button>
+          </>
+        ) : (
+          <>
         <div className="auth-field">
           <label htmlFor="password">
             Password
@@ -334,6 +394,19 @@ function RegisterPage() {
           </span>
         </label>
 
+        <div className="auth-form__actions">
+          <button
+            className="auth-form__button auth-form__button--ghost"
+            type="button"
+            onClick={() => {
+              setErrorMessage("");
+              setCurrentStep(1);
+            }}
+            disabled={isSubmitting}
+          >
+            Back
+          </button>
+
         <button
           className="auth-form__button"
           type="submit"
@@ -348,8 +421,13 @@ function RegisterPage() {
             "Create account"
           )}
         </button>
+        </div>
+          </>
+        )}
       </form>
 
+      {currentStep === 1 && (
+        <>
       <div className="auth-divider">
         Social login coming soon
       </div>
@@ -371,6 +449,9 @@ function RegisterPage() {
           Microsoft
         </button>
       </div>
+
+        </>
+      )}
 
       <p className="auth-form__footer">
         Already have an account?{" "}

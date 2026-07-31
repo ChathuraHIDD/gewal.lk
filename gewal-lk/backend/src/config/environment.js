@@ -32,6 +32,17 @@ const parseNumber = (value, fallbackValue) => {
     : parsedValue;
 };
 
+const parseList = (value, fallbackValue) => {
+  const parsedValues = (value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return parsedValues.length > 0
+    ? parsedValues
+    : fallbackValue;
+};
+
 export const environment = Object.freeze({
   nodeEnv: process.env.NODE_ENV || "development",
 
@@ -41,9 +52,19 @@ export const environment = Object.freeze({
 
   mongoUri: process.env.MONGODB_URI,
 
+  dnsServers: parseList(
+    process.env.DNS_SERVERS,
+    []
+  ),
+
   frontendUrl:
     process.env.FRONTEND_URL ||
     "http://localhost:5173",
+
+  frontendUrls: parseList(
+    process.env.FRONTEND_URL,
+    ["http://localhost:5173"]
+  ),
 
   backendUrl:
     process.env.BACKEND_URL ||

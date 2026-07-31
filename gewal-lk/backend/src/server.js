@@ -32,7 +32,7 @@ const startServer = async () => {
         `Health check: http://localhost:${environment.port}/api/${environment.apiVersion}/health`
       );
       console.log(
-        `Database: ${mongoose.connection.name}`
+        `Database: ${mongoose.connection.name || "not connected"}`
       );
       console.log("========================================");
     });

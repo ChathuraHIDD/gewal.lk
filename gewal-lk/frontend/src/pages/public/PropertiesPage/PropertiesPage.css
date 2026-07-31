@@ -296,14 +296,22 @@
   overflow: hidden;
   height: 285px;
   border-radius: 12px;
-  background: #e9ece7;
+  background:
+    linear-gradient(35deg, transparent 48%, rgba(255, 217, 102, 0.7) 49%, rgba(255, 217, 102, 0.7) 51%, transparent 52%),
+    linear-gradient(118deg, transparent 47%, rgba(143, 188, 143, 0.55) 48%, rgba(143, 188, 143, 0.55) 52%, transparent 53%),
+    #e9ece7;
 }
 
-.map-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.75);
+.map-card__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+  background-image:
+    linear-gradient(rgba(169, 174, 165, 0.38) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(169, 174, 165, 0.38) 1px, transparent 1px),
+    radial-gradient(circle at 54% 48%, rgba(15, 143, 132, 0.16), transparent 19%);
+  background-size: 54px 54px, 54px 54px, 100% 100%;
+  transform: rotate(-8deg) scale(1.22);
 }
 
 .map-card span {

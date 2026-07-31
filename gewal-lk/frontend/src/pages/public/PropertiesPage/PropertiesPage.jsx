@@ -126,8 +126,12 @@ function PropertiesPage() {
                 <button>Shop & Restaurant</button>
                 <button>Commute location</button>
               </div>
-              <div className="map-card">
-                <img src="https://api.mapbox.com/styles/v1/mapbox/light-v10/static/pin-s+6d28d9(79.8612,6.9271)/79.8612,6.9271,13,0/900x360?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpbGk5Zm5sdTAwM2Eyd2xjOHpvNmF2NnkifQ.8XYDXPfvpnEVxmTn9-8SKw" alt="Map location" />
+              <div
+                className="map-card"
+                role="img"
+                aria-label="Map preview showing property location in Colombo"
+              >
+                <div className="map-card__grid" />
                 <span><MapPin size={22} /></span>
               </div>
             </section>

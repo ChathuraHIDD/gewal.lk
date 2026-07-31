@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 
+import PropertySearchFilter from "../../../components/property/PropertySearchFilter.jsx";
 import fullLogo from "../../../assets/logos/gewal-full-logo.png";
 import "./HomePage.css";
 
@@ -92,17 +93,7 @@ const testimonials = [
   },
 ];
 
-function Field({ label, value }) {
-  return (
-    <label className="home-search__field">
-      <span>{label}</span>
-      <input defaultValue={value} aria-label={label} />
-    </label>
-  );
-}
-
 function HomePage() {
-  const [activeTab, setActiveTab] = useState("Buy");
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const testimonial = testimonials[activeTestimonial];
 
@@ -128,33 +119,13 @@ function HomePage() {
             </div>
           </motion.div>
 
-          <motion.form
-            className="home-search"
+          <motion.div
             initial={{ opacity: 0, y: 38 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.2 }}
           >
-            <div className="home-search__tabs">
-              {["Buy", "Rent", "Sell"].map((tab) => (
-                <button
-                  type="button"
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={activeTab === tab ? "is-active" : ""}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-            <div className="home-search__grid">
-              <Field label="Location" value="Colombo, Sri Lanka" />
-              <Field label="Property Type" value="Luxury House" />
-              <Field label="Price Range" value="Any Price" />
-              <Field label="Bedrooms" value="Any" />
-              <Field label="Bathrooms" value="Any" />
-              <button className="home-search__button" type="submit"><Search size={18} /> Search</button>
-            </div>
-          </motion.form>
+            <PropertySearchFilter />
+          </motion.div>
         </div>
       </section>
 

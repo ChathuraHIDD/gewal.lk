@@ -1,0 +1,541 @@
+.property-filter {
+  width: 100%;
+  max-width: 1220px;
+  margin-inline: auto;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(26px);
+  box-shadow: 0 34px 90px rgba(19, 8, 38, 0.28);
+}
+
+.property-filter__default {
+  display: grid;
+  grid-template-columns: 230px minmax(240px, 1.2fr) minmax(210px, 0.9fr) 170px;
+  grid-template-areas:
+    "type location property search"
+    "price price bedrooms more";
+  gap: 12px;
+  align-items: end;
+}
+
+.filter-segment { grid-area: type; }
+.filter-autocomplete { grid-area: location; }
+.filter-multiselect { grid-area: property; }
+.range-filter { grid-area: price; }
+.filter-chip-field { grid-area: bedrooms; }
+.property-filter__search { grid-area: search; }
+.property-filter__more { grid-area: more; }
+
+.filter-segment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  min-height: 60px;
+  padding: 6px;
+  border-radius: 20px;
+  background: #f2eafd;
+}
+
+.filter-segment button,
+.property-filter__more,
+.property-filter__search,
+.filter-multiselect > button,
+.filter-chips button,
+.map-search-card button,
+.radius-card button {
+  cursor: pointer;
+}
+
+.filter-segment button {
+  border-radius: 16px;
+  color: #62586d;
+  background: transparent;
+  font-weight: 900;
+  transition: 180ms ease;
+}
+
+.filter-segment button.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  box-shadow: 0 14px 28px rgba(109, 40, 217, 0.28);
+}
+
+.filter-autocomplete,
+.filter-multiselect,
+.range-filter,
+.filter-chip-field,
+.filter-select,
+.keyword-field,
+.radius-card label {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.filter-autocomplete > span,
+.filter-multiselect > span,
+.range-filter__header > span,
+.filter-chip-field > span,
+.filter-select span,
+.keyword-field span,
+.radius-card label span {
+  color: #807389;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.filter-autocomplete svg {
+  position: absolute;
+  left: 15px;
+  bottom: 18px;
+  color: #6d28d9;
+}
+
+.filter-autocomplete input,
+.filter-multiselect > button,
+.filter-select select,
+.keyword-field input,
+.radius-card input {
+  width: 100%;
+  min-height: 58px;
+  padding: 0 15px;
+  border: 1px solid #e6dff0;
+  border-radius: 18px;
+  color: #18151c;
+  background: #fff;
+  font-weight: 850;
+  outline: 0;
+  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
+}
+
+.filter-autocomplete input {
+  padding-left: 44px;
+}
+
+.filter-autocomplete input:focus,
+.filter-select select:focus,
+.keyword-field input:focus,
+.radius-card input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.1);
+}
+
+.filter-autocomplete__menu,
+.filter-multiselect__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  max-height: 220px;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid #e6dff0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 45px rgba(40, 18, 66, 0.14);
+}
+
+.filter-autocomplete__menu button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  color: #5f536d;
+  background: transparent;
+  text-align: left;
+}
+
+.filter-autocomplete__menu button:hover {
+  background: #f5efff;
+  color: #6d28d9;
+}
+
+.filter-multiselect > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  overflow: hidden;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.filter-multiselect__menu {
+  display: none;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.filter-multiselect:hover .filter-multiselect__menu,
+.filter-multiselect:focus-within .filter-multiselect__menu {
+  display: grid;
+}
+
+.filter-multiselect__menu label,
+.filter-checkbox-card label,
+.amenities-card label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 9px;
+  border-radius: 10px;
+  color: #5f536d;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.filter-multiselect__menu label:hover,
+.filter-checkbox-card label:hover,
+.amenities-card label:hover {
+  background: #f7f2ff;
+}
+
+.range-filter {
+  padding: 12px 14px;
+  border: 1px solid #e6dff0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
+}
+
+.range-filter__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.range-filter__header strong {
+  color: #6d28d9;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.range-filter__sliders {
+  position: relative;
+  height: 18px;
+}
+
+.range-filter__sliders input {
+  position: absolute;
+  inset-inline: 0;
+  width: 100%;
+  accent-color: #6d28d9;
+  pointer-events: none;
+}
+
+.range-filter__sliders input::-webkit-slider-thumb { pointer-events: auto; }
+
+.range-filter__inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.range-filter__inputs input {
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #eee8f5;
+  border-radius: 11px;
+  color: #3d3449;
+  background: #fbf9fd;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.filter-chip-field {
+  padding: 10px 12px;
+  border: 1px solid #e6dff0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-chips button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e6dff0;
+  border-radius: 999px;
+  color: #675c73;
+  background: #fff;
+  font-size: 0.84rem;
+  font-weight: 900;
+  transition: 180ms ease;
+}
+
+.filter-chips button.is-active {
+  color: #fff;
+  border-color: #6d28d9;
+  background: #6d28d9;
+}
+
+.property-filter__search,
+.property-filter__more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 58px;
+  padding: 0 22px;
+  border-radius: 18px;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.property-filter__search {
+  color: #fff;
+  background: linear-gradient(135deg, #6d28d9, #9333ea 60%, #c084fc);
+  box-shadow: 0 18px 38px rgba(109, 40, 217, 0.3);
+}
+
+.property-filter__more {
+  color: #6d28d9;
+  border: 1px solid #ddcff4;
+  background: #fff;
+}
+
+.advanced-filter {
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid #e8e0f1;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.advanced-filter__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.advanced-filter__header span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #6d28d9;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.advanced-filter__header h3 {
+  margin: 4px 0 0;
+  color: #17121f;
+  font-size: 1.35rem;
+}
+
+.advanced-filter__header > button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #6d28d9;
+  background: #f4edff;
+  cursor: pointer;
+}
+
+.advanced-filter__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.filter-select svg {
+  position: absolute;
+  right: 13px;
+  bottom: 20px;
+  color: #91869d;
+  pointer-events: none;
+}
+
+.filter-select select { appearance: none; }
+
+.filter-checkbox-card,
+.amenities-card,
+.radius-card,
+.map-search-card {
+  padding: 16px;
+  border: 1px solid #e8e0f1;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.filter-checkbox-card h4,
+.amenities-card h4 {
+  margin: 0 0 8px;
+  color: #211a2a;
+}
+
+.amenities-card { margin-top: 16px; }
+
+.amenities-card > div {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.advanced-filter__bottom {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 0.9fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.toggles-grid { display: grid; gap: 9px; }
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid #e8e0f1;
+  border-radius: 14px;
+  background: #fff;
+  color: #4d4358;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.filter-toggle input { position: absolute; opacity: 0; }
+
+.filter-toggle i {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #e4dce9;
+  transition: background 180ms ease;
+}
+
+.filter-toggle i::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+  content: "";
+  transition: transform 180ms ease;
+}
+
+.filter-toggle input:checked + i { background: #6d28d9; }
+.filter-toggle input:checked + i::after { transform: translateX(18px); }
+
+.radius-card div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.radius-card button {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #6d28d9;
+  background: #f4edff;
+  font-weight: 850;
+}
+
+.map-search-card { display: grid; gap: 10px; }
+
+.map-search-card__map {
+  display: grid;
+  place-items: center;
+  min-height: 130px;
+  border-radius: 14px;
+  color: #6d28d9;
+  background:
+    linear-gradient(rgba(109, 40, 217, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px),
+    #f7f3ff;
+  background-size: 26px 26px;
+  text-align: center;
+}
+
+.map-search-card__map span {
+  color: #6c6079;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.map-search-card button {
+  min-height: 43px;
+  border-radius: 13px;
+  color: #fff;
+  background: #6d28d9;
+  font-weight: 900;
+}
+
+@media (max-width: 1180px) {
+  .property-filter__default {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "type location"
+      "property price"
+      "bedrooms bedrooms"
+      "search more";
+  }
+}
+
+@media (max-width: 980px) {
+  .advanced-filter__grid,
+  .advanced-filter__bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .amenities-card > div { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .property-filter {
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .property-filter__default,
+  .advanced-filter__grid,
+  .advanced-filter__bottom,
+  .amenities-card > div {
+    grid-template-columns: 1fr;
+  }
+
+  .property-filter__default {
+    grid-template-areas:
+      "type"
+      "location"
+      "property"
+      "price"
+      "bedrooms"
+      "search"
+      "more";
+  }
+
+  .filter-segment { min-height: 52px; }
+
+  .advanced-filter {
+    padding: 16px;
+    border-radius: 20px;
+  }
+}

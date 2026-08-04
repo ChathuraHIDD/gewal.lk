@@ -806,3 +806,133 @@
 .market-bottom-nav a.active {
   color: #a23cff;
 }
+
+/* Final navbar refinement to match reference */
+.market-header {
+  background: #f5f2ea;
+  border-bottom: 1px solid #ded9ce;
+}
+
+.market-header__main-inner {
+  min-height: 64px;
+  justify-content: space-between;
+}
+
+.market-header__logo img {
+  width: 92px;
+  display: block;
+}
+
+.market-header__nav {
+  flex: 1;
+  gap: 22px;
+  margin-left: 22px;
+}
+
+.market-header__nav > a,
+.market-header__nav-item > a {
+  min-height: 64px;
+  padding: 0;
+  color: #625d54;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.market-header__nav-item > a svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.1;
+  margin-left: 1px;
+}
+
+.market-header__nav > a:hover,
+.market-header__nav-item > a:hover,
+.market-header__nav > a.active,
+.market-header__nav-item > a.active {
+  color: #171713;
+}
+
+.market-header__user-actions {
+  gap: 14px;
+}
+
+.market-header__notification-wrap {
+  padding-block: 0;
+  margin-block: 0;
+}
+
+.market-header__badge {
+  width: 30px;
+  min-height: 30px;
+  border: 0;
+  color: #625d54;
+  background: transparent;
+}
+
+.market-header__badge svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.9;
+}
+
+.market-header__badge i {
+  top: 2px;
+  right: 3px;
+  min-width: 7px;
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 1px solid #f5f2ea;
+  background: #a23cff;
+  color: transparent;
+  font-size: 0;
+}
+
+.market-header__post {
+  min-height: 40px;
+  padding: 0 23px;
+  border-radius: 999px;
+  background: #a832ff;
+  color: #fff;
+  font-size: 0.91rem;
+  font-weight: 800;
+}
+
+.market-header__post svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.4;
+}
+
+.market-header__avatar {
+  width: 38px;
+  min-height: 38px;
+  border: 1px solid #ded9ce;
+  border-radius: 50%;
+  color: #625d54;
+  background: transparent;
+}
+
+.market-header__avatar svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.9;
+}
+
+.market-header__badge:hover,
+.market-header__avatar:hover {
+  color: #a23cff;
+  background: transparent;
+}
+
+@media (max-width: 1120px) {
+  .market-header__nav {
+    gap: 14px;
+  }
+
+  .market-header__nav > a,
+  .market-header__nav-item > a {
+    font-size: 0.86rem;
+  }
+}

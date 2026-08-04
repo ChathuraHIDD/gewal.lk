@@ -18,6 +18,7 @@ import ContactPage from "./pages/public/ContactPage/ContactPage.jsx";
 import AboutPage from "./pages/public/AboutPage/AboutPage.jsx";
 import NewProjectsPage from "./pages/projects/NewProjectsPage/NewProjectsPage.jsx";
 import CommercialPage from "./pages/commercial/CommercialPage/CommercialPage.jsx";
+import MessagesPage from "./pages/messages/MessagesPage/MessagesPage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -71,6 +72,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/dashboard" element={<UserDashboardPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
         <Route path="/admin" element={<AdminPanelPage />} />
         <Route path="/post-property" element={<PostPropertyPage />} />
 

@@ -13,6 +13,7 @@ import PostPropertyPage from "./pages/property/PostPropertyPage/PostPropertyPage
 import UserDashboardPage from "./pages/dashboard/UserDashboardPage/UserDashboardPage.jsx";
 import AgentProfilePage from "./pages/agents/AgentProfilePage/AgentProfilePage.jsx";
 import AdminPanelPage from "./pages/admin/AdminPanelPage/AdminPanelPage.jsx";
+import BlogPage from "./pages/blog/BlogPage/BlogPage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -62,7 +63,7 @@ function App() {
         <Route path="/agents" element={<AgentProfilePage />} />
         <Route path="/agents/:id" element={<AgentProfilePage />} />
         <Route path="/new-projects" element={<StaticPage page="new-projects" />} />
-        <Route path="/blog" element={<StaticPage page="blog" />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/about" element={<StaticPage page="about" />} />
         <Route path="/contact" element={<StaticPage page="contact" />} />
         <Route path="/dashboard" element={<UserDashboardPage />} />

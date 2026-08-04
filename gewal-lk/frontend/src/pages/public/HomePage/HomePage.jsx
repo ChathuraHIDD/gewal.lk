@@ -108,14 +108,19 @@ function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <span className="premium-hero__eyebrow"><Sparkles size={18} /> Premium Sri Lankan real estate</span>
-            <h1>Find Your Dream Home With Gewal.lk</h1>
+            <span className="premium-hero__eyebrow"><Sparkles size={18} /> Sri Lanka’s premium property marketplace</span>
+            <h1>Search smarter. Move faster. Find better properties.</h1>
             <p>
-              Discover verified luxury homes, elegant apartments and investment-ready properties with trusted agents across Sri Lanka.
+              Buy, rent, lease or list verified homes, apartments, lands and commercial spaces with trusted agents across Sri Lanka.
             </p>
             <div className="premium-hero__actions">
               <a className="btn btn--primary" href="/properties">Explore Properties <ArrowRight size={18} /></a>
-              <a className="btn btn--secondary" href="/contact">Book Consultation</a>
+              <a className="btn btn--secondary" href="/post-property">Post Property</a>
+            </div>
+            <div className="premium-hero__stats">
+              <span><strong>10k+</strong> Listings</span>
+              <span><strong>2k+</strong> Agents</span>
+              <span><strong>24/7</strong> Support</span>
             </div>
           </motion.div>
 

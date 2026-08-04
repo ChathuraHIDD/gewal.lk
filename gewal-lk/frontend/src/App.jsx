@@ -11,6 +11,7 @@ import PropertyListPage from "./pages/public/PropertyListPage/PropertyListPage.j
 import StaticPage from "./pages/public/StaticPage/StaticPage.jsx";
 import PostPropertyPage from "./pages/property/PostPropertyPage/PostPropertyPage.jsx";
 import UserDashboardPage from "./pages/dashboard/UserDashboardPage/UserDashboardPage.jsx";
+import AgentProfilePage from "./pages/agents/AgentProfilePage/AgentProfilePage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -57,7 +58,8 @@ function App() {
         <Route path="/buy" element={<PropertyListPage />} />
         <Route path="/rent" element={<PropertyListPage />} />
         <Route path="/commercial" element={<StaticPage page="commercial" />} />
-        <Route path="/agents" element={<StaticPage page="agents" />} />
+        <Route path="/agents" element={<AgentProfilePage />} />
+        <Route path="/agents/:id" element={<AgentProfilePage />} />
         <Route path="/new-projects" element={<StaticPage page="new-projects" />} />
         <Route path="/blog" element={<StaticPage page="blog" />} />
         <Route path="/about" element={<StaticPage page="about" />} />

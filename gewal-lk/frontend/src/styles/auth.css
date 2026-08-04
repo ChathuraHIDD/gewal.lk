@@ -48,6 +48,53 @@
   gap: 12px;
 }
 
+.auth-role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.auth-role-card {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid #e7e0ee;
+  border-radius: 16px;
+  color: #746b80;
+  background: rgba(255, 255, 255, 0.82);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.auth-role-card:hover {
+  border-color: #d6c7e7;
+  background: #fff;
+}
+
+.auth-role-card strong {
+  color: #18151c;
+  font-size: 0.88rem;
+}
+
+.auth-role-card span {
+  color: #9c93a8;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.auth-role-card--active {
+  border-color: #6d28d9;
+  background: #f4edff;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+.auth-role-card--active svg,
+.auth-role-card--active strong {
+  color: #6d28d9;
+}
+
 .auth-field {
   display: grid;
   gap: 8px;
@@ -313,7 +360,8 @@
 @media (max-width: 560px) {
   .auth-form__row,
   .auth-social-grid,
-  .auth-form__actions {
+  .auth-form__actions,
+  .auth-role-grid {
     grid-template-columns: 1fr;
   }
 

@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  AlertCircle,
   BarChart3,
   Bell,
   CalendarDays,
@@ -9,6 +10,7 @@ import {
   Heart,
   Home,
   LayoutDashboard,
+  Loader2,
   MessageCircle,
   Plus,
   Search,
@@ -20,9 +22,22 @@ import {
 
 import PropertyCard from "../../../components/property/PropertyCard/PropertyCard.jsx";
 import { demoProperties } from "../../../data/demoProperties.js";
+import { useAuth } from "../../../hooks/useAuth.js";
+import { getMyProperties } from "../../../services/propertyService.js";
 import "./UserDashboardPage.css";
 
-const tabs = [
+const canPostProperty = (user) =>
+  Boolean(user?.roles?.some((role) => role === "seller" || role === "agent"));
+
+const roleLabel = (user) => {
+  if (!user) return "Buyer account";
+  if (user.roles?.includes("admin") || user.roles?.includes("super_admin")) return "Admin account";
+  if (user.roles?.includes("agent")) return "Agent account";
+  if (user.roles?.includes("seller")) return "Seller account";
+  return "Buyer account";
+};
+
+const allTabs = [
   ["overview", LayoutDashboard, "Overview"],
   ["saved", Heart, "Saved"],
   ["recent", Eye, "Recently Viewed"],
@@ -54,11 +69,19 @@ const conversations = [
 ];
 
 function UserDashboardPage() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [saved, setSaved] = useState(demoProperties.slice(0, 3));
   const [query, setQuery] = useState("");
   const [readNotifications, setReadNotifications] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
+
+  const canPost = canPostProperty(user);
+
+  const tabs = useMemo(
+    () => allTabs.filter(([key]) => key !== "properties" || canPost),
+    [canPost]
+  );
 
   const filteredSaved = useMemo(
     () => saved.filter((property) => property.title.toLowerCase().includes(query.toLowerCase()) || property.location.toLowerCase().includes(query.toLowerCase())),
@@ -73,15 +96,15 @@ function UserDashboardPage() {
           <h1>Your property command center</h1>
           <p>Manage saved properties, appointments, messages, notifications, listings and billing from one premium dashboard.</p>
         </div>
-        <a href="/post-property"><Plus size={18} /> Post Property</a>
+        {canPost && <a href="/post-property"><Plus size={18} /> Post Property</a>}
       </section>
 
       <section className="container dashboard-shell">
         <aside className="dashboard-sidebar">
           <div className="dashboard-profile-card">
             <span><UserRound size={26} /></span>
-            <h3>Guest User</h3>
-            <p>Buyer account</p>
+            <h3>{user ? `${user.firstName} ${user.lastName}` : "Guest User"}</h3>
+            <p>{roleLabel(user)}</p>
           </div>
           <nav>
             {tabs.map(([key, Icon, label]) => (
@@ -141,11 +164,7 @@ function UserDashboardPage() {
             </Panel>
           )}
 
-          {activeTab === "properties" && (
-            <Panel title="My Properties" description="Manage your published and draft listings.">
-              <div className="dashboard-list">{demoProperties.slice(0, 2).map((item) => <article key={item.id}><Home size={20} /><div><h3>{item.title}</h3><p>{item.location}</p></div><span>Published</span></article>)}</div>
-            </Panel>
-          )}
+          {activeTab === "properties" && <MyPropertiesPanel />}
 
           {activeTab === "billing" && <BillingPanel />}
           {activeTab === "settings" && <SettingsPanel />}
@@ -161,6 +180,55 @@ function Overview({ setActiveTab }) {
     <Panel title="Dashboard Overview" description="Quick insights and shortcuts.">
       <div className="dashboard-stats">{stats.map(([label, value, Icon]) => <button key={label} onClick={() => setActiveTab(label.toLowerCase() === "views" ? "recent" : label.toLowerCase())}><Icon size={22} /><strong>{value}</strong><span>{label}</span></button>)}</div>
       <div className="dashboard-chart"><BarChart3 size={30} /><h3>Property activity</h3><div><i style={{ height: "45%" }} /><i style={{ height: "70%" }} /><i style={{ height: "55%" }} /><i style={{ height: "85%" }} /><i style={{ height: "65%" }} /></div></div>
+    </Panel>
+  );
+}
+
+function MyPropertiesPanel() {
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getMyProperties()
+      .then((result) => {
+        if (!cancelled) setProperties(result.data.properties);
+      })
+      .catch((requestError) => {
+        if (!cancelled) setError(requestError.message || "Failed to load your properties.");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <Panel title="My Properties" description="Track the approval status of every listing you've posted.">
+      {isLoading && <p className="dashboard-state"><Loader2 size={18} className="dashboard-spin" /> Loading your properties...</p>}
+      {!isLoading && error && <p className="dashboard-state"><AlertCircle size={18} /> {error}</p>}
+      {!isLoading && !error && properties.length === 0 && (
+        <p className="dashboard-state"><Home size={18} /> You haven't posted any properties yet. <a href="/post-property">Post your first property</a>.</p>
+      )}
+      {!isLoading && !error && properties.length > 0 && (
+        <div className="dashboard-list">
+          {properties.map((item) => (
+            <article key={item._id}>
+              <Home size={20} />
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.location ? `${item.location.city}, ${item.location.district}` : item.propertyType} · Rs. {Number(item.price).toLocaleString()}</p>
+              </div>
+              <span className={`dashboard-status dashboard-status--${item.status.toLowerCase()}`}>{item.status}</span>
+            </article>
+          ))}
+        </div>
+      )}
     </Panel>
   );
 }

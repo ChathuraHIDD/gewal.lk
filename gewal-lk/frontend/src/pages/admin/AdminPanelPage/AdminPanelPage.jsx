@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
+  AlertCircle,
   BadgeCheck,
   BarChart3,
   Bell,
@@ -13,10 +14,13 @@ import {
   Home,
   Image,
   LayoutDashboard,
+  Loader2,
   Megaphone,
+  Plus,
   Search,
   Settings,
   ShieldAlert,
+  ShieldCheck,
   Star,
   Trash2,
   UserRound,
@@ -25,10 +29,17 @@ import {
 } from "lucide-react";
 
 import { demoProperties } from "../../../data/demoProperties.js";
+import { useAuth } from "../../../hooks/useAuth.js";
+import {
+  createAdmin,
+  deleteAdmin,
+  getAdmins,
+} from "../../../services/adminService.js";
 import "./AdminPanelPage.css";
 
 const tabs = [
   ["dashboard", LayoutDashboard, "Dashboard"],
+  ["admins", ShieldCheck, "Manage Admins"],
   ["users", UsersRound, "Users"],
   ["agents", BadgeCheck, "Agents"],
   ["agencies", Building2, "Agencies"],
@@ -59,6 +70,7 @@ const reportsSeed = [
 ];
 
 function AdminPanelPage() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [users, setUsers] = useState(usersSeed);
   const [properties, setProperties] = useState(demoProperties.map((item, index) => ({ ...item, approval: index % 2 ? "Pending" : "Approved" })));
@@ -92,7 +104,7 @@ function AdminPanelPage() {
         <aside className="admin-sidebar">
           <div className="admin-brand-card">
             <ShieldAlert size={28} />
-            <h3>Super Admin</h3>
+            <h3>{user ? `${user.firstName} ${user.lastName}` : "Admin"}</h3>
             <p>Full platform access</p>
           </div>
           <nav>
@@ -106,6 +118,8 @@ function AdminPanelPage() {
 
         <div className="admin-content">
           {activeTab === "dashboard" && <DashboardPanel />}
+
+          {activeTab === "admins" && <AdminsPanel currentUserId={user?._id} />}
 
           {activeTab === "users" && (
             <Panel title="Users" description="Search, suspend, activate and manage platform users.">
@@ -149,7 +163,7 @@ function AdminPanelPage() {
             </Panel>
           )}
 
-          {!["dashboard", "users", "properties", "approval", "reports"].includes(activeTab) && (
+          {!["dashboard", "admins", "users", "properties", "approval", "reports"].includes(activeTab) && (
             <GenericAdminPanel tab={activeTab} />
           )}
         </div>
@@ -161,6 +175,101 @@ function AdminPanelPage() {
 function DashboardPanel() {
   const stats = [["Users", "12.4k", UsersRound], ["Properties", "4.8k", Home], ["Revenue", "Rs. 2.1M", CreditCard], ["Reports", "18", Flag]];
   return <Panel title="Dashboard" description="Realtime overview of marketplace health."><div className="admin-stats">{stats.map(([label, value, Icon]) => <article key={label}><Icon size={24} /><strong>{value}</strong><span>{label}</span></article>)}</div><div className="admin-chart"><BarChart3 size={34} /><h3>Monthly platform activity</h3><div><i style={{height:"45%"}}/><i style={{height:"68%"}}/><i style={{height:"54%"}}/><i style={{height:"86%"}}/><i style={{height:"72%"}}/><i style={{height:"92%"}}/></div></div></Panel>;
+}
+
+const initialAdminForm = { firstName: "", lastName: "", email: "", password: "" };
+
+function AdminsPanel({ currentUserId }) {
+  const [admins, setAdmins] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState(initialAdminForm);
+  const [isCreating, setIsCreating] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const loadAdmins = () => {
+    setIsLoading(true);
+    getAdmins()
+      .then((result) => setAdmins(result.data.admins))
+      .catch((requestError) => setError(requestError.message || "Failed to load admin accounts."))
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    loadAdmins();
+  }, []);
+
+  const updateField = (event) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const handleCreate = async (event) => {
+    event.preventDefault();
+    setError("");
+    setIsCreating(true);
+
+    try {
+      await createAdmin(form);
+      setForm(initialAdminForm);
+      loadAdmins();
+    } catch (requestError) {
+      setError(requestError.message || "Failed to create admin account.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleDelete = async (adminId) => {
+    setError("");
+    setDeletingId(adminId);
+
+    try {
+      await deleteAdmin(adminId);
+      setAdmins((current) => current.filter((item) => item._id !== adminId));
+    } catch (requestError) {
+      setError(requestError.message || "Failed to delete admin account.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <Panel title="Manage Admins" description="Only admins can create or delete other admin accounts.">
+      {error && <p className="admin-state admin-state--error"><AlertCircle size={17} /> {error}</p>}
+
+      <form className="admin-create-form" onSubmit={handleCreate}>
+        <input name="firstName" value={form.firstName} onChange={updateField} placeholder="First name" required />
+        <input name="lastName" value={form.lastName} onChange={updateField} placeholder="Last name" required />
+        <input name="email" type="email" value={form.email} onChange={updateField} placeholder="Email address" required />
+        <input name="password" type="password" value={form.password} onChange={updateField} placeholder="Password" required />
+        <button type="submit" disabled={isCreating}>{isCreating ? <Loader2 size={16} className="admin-spin" /> : <Plus size={16} />} Add Admin</button>
+      </form>
+
+      {isLoading ? (
+        <p className="admin-state"><Loader2 size={17} className="admin-spin" /> Loading admin accounts...</p>
+      ) : (
+        <DataTable columns={["Name", "Email", "Role", "Actions"]}>
+          {admins.map((admin) => (
+            <tr key={admin._id}>
+              <td>{admin.firstName} {admin.lastName}</td>
+              <td>{admin.email}</td>
+              <td>{admin.roles.join(", ")}</td>
+              <td>
+                <button
+                  onClick={() => handleDelete(admin._id)}
+                  disabled={admin._id === currentUserId || deletingId === admin._id}
+                  title={admin._id === currentUserId ? "You cannot delete your own account" : "Delete admin"}
+                >
+                  <Trash2 size={15} /> {deletingId === admin._id ? "Deleting..." : "Delete"}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </DataTable>
+      )}
+    </Panel>
+  );
 }
 
 function PropertiesPanel({ properties }) {

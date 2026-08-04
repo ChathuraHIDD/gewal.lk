@@ -5,10 +5,11 @@ import {
 
 import { useAuth } from "../hooks/useAuth.js";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, roles, redirectTo = "/dashboard" }) {
   const location = useLocation();
 
   const {
+    user,
     isAuthenticated,
     isLoading,
   } = useAuth();
@@ -37,6 +38,18 @@ function ProtectedRoute({ children }) {
         state={{
           from: location,
         }}
+      />
+    );
+  }
+
+  if (
+    roles &&
+    !roles.some((role) => user?.roles?.includes(role))
+  ) {
+    return (
+      <Navigate
+        to={redirectTo}
+        replace
       />
     );
   }

@@ -84,8 +84,8 @@ const clearAuthenticationCookies = (
 /*
  * Register a new account
  *
- * Registration does not create access tokens yet.
- * The user must verify the OTP first.
+ * Email verification is not currently required — the
+ * account is activated and signed in immediately.
  */
 
 export const register = asyncHandler(
@@ -95,14 +95,18 @@ export const register = asyncHandler(
       request,
     });
 
+    setAuthenticationCookies(
+      response,
+      result.tokens.accessToken,
+      result.tokens.refreshToken
+    );
+
     return response.status(201).json(
       new ApiResponse({
         statusCode: 201,
-        message:
-          "Account created successfully. A verification code has been generated.",
+        message: "Account created successfully",
         data: {
           user: result.user,
-          verificationRequired: true,
         },
       })
     );

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertCircle,
@@ -15,6 +15,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 
+import { useAuth } from "../../../hooks/useAuth.js";
 import { createProperty } from "../../../services/propertyService.js";
 
 import "./PostPropertyPage.css";
@@ -60,9 +61,22 @@ const requiredFieldsByStep = [
 
 function PostPropertyPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (!user) return;
+
+    setForm((current) => ({
+      ...current,
+      contactName: current.contactName || `${user.firstName} ${user.lastName}`.trim(),
+      contactPhone: current.contactPhone || user.phone || "",
+      contactEmail: current.contactEmail || user.email || "",
+    }));
+  }, [user]);
+
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [images, setImages] = useState([]);
   const [published, setPublished] = useState(false);

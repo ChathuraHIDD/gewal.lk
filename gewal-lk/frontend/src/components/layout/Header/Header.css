@@ -393,18 +393,26 @@
   font-weight: 700;
 }
 
-.market-header__profile-menu a {
+.market-header__profile-menu a,
+.market-header__profile-menu button {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 10px;
   padding: 11px 12px;
+  border: 0;
   border-radius: 14px;
   color: #44384f;
+  background: transparent;
+  font: inherit;
   font-size: 0.9rem;
   font-weight: 850;
+  text-align: left;
+  cursor: pointer;
 }
 
-.market-header__profile-menu a:hover {
+.market-header__profile-menu a:hover,
+.market-header__profile-menu button:hover {
   color: #6d28d9;
   background: #f6f0ff;
 }

@@ -70,9 +70,15 @@ const userSchema = new mongoose.Schema(
     },
 
     phone: {
+      /*
+       * No default value on purpose: the "phone" unique
+       * index below is sparse, which only skips documents
+       * where the field is entirely absent. An explicit
+       * `null` default would still populate the index and
+       * collide across every phone-less account.
+       */
       type: String,
       trim: true,
-      default: null,
     },
 
     password: {

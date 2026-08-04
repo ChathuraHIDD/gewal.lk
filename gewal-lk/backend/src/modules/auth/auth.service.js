@@ -5,6 +5,7 @@ import {
   USER_ROLES,
 } from "../../constants/auth.constants.js";
 
+import { AgentProfile } from "../../models/propertyPlatform.models.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { User } from "../users/user.model.js";
 
@@ -76,8 +77,10 @@ const createTokenPair = async ({
 /**
  * Register a new local Gewal.lk user.
  *
- * The account stays pending until the user verifies
- * the email address using the six-digit OTP.
+ * Email verification is not currently enforced before
+ * login — the OTP infrastructure stays in place for a
+ * future re-enablement, but new accounts are activated
+ * and signed in immediately upon registration.
  */
 export const registerUser = async ({
   firstName,
@@ -85,6 +88,7 @@ export const registerUser = async ({
   email,
   phone,
   password,
+  role,
   request,
 }) => {
   const normalisedEmail =
@@ -119,72 +123,48 @@ export const registerUser = async ({
     }
   }
 
+  const assignedRole = [
+    USER_ROLES.BUYER,
+    USER_ROLES.SELLER,
+    USER_ROLES.AGENT,
+  ].includes(role)
+    ? role
+    : USER_ROLES.BUYER;
+
   const user = await User.create({
     firstName,
     lastName,
     email: normalisedEmail,
-    phone: phone || null,
+    phone: phone || undefined,
     password,
 
-    roles: [
-      USER_ROLES.BUYER,
-    ],
+    roles: [assignedRole],
 
     primaryAuthProvider:
       AUTH_PROVIDERS.LOCAL,
 
     accountStatus:
-      ACCOUNT_STATUSES.PENDING,
+      ACCOUNT_STATUSES.ACTIVE,
 
-    emailVerified: false,
+    emailVerified: true,
     phoneVerified: false,
+    lastLogin: new Date(),
   });
 
-  try {
-    const { otp } = await createOtp({
-      user,
-      type:
-        OTP_TYPES.EMAIL_VERIFICATION,
-      request,
-    });
-
-    /*
-     * When development email mode is disabled,
-     * this service prints the OTP in the terminal.
-     *
-     * When SMTP is configured later, it sends the
-     * same OTP to the user's email address.
-     */
-    await sendVerificationOtpEmail({
-      user,
-      otp,
-    });
-  } catch (error) {
-    /*
-     * Remove the incomplete user when OTP creation
-     * or delivery fails.
-     */
-    await User.findByIdAndDelete(user._id);
-
-    throw new ApiError({
-      statusCode: 500,
-      message:
-        "Account registration failed because the verification code could not be generated or delivered",
-      code:
-        "VERIFICATION_CODE_DELIVERY_FAILED",
-      errors: [
-        {
-          message:
-            error.message ||
-            "Verification setup failed",
-        },
-      ],
+  if (assignedRole === USER_ROLES.AGENT) {
+    await AgentProfile.create({
+      userId: user._id,
     });
   }
 
+  const tokens = await createTokenPair({
+    user,
+    request,
+  });
+
   return {
     user,
-    verificationRequired: true,
+    tokens,
   };
 };
 

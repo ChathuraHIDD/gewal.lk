@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {
+  BadgeCheck,
+  Building2,
   Eye,
   EyeOff,
   LockKeyhole,
@@ -12,7 +14,29 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
 
+const roleOptions = [
+  {
+    value: "buyer",
+    label: "Buyer",
+    description: "Browse and save properties",
+    icon: UserRound,
+  },
+  {
+    value: "seller",
+    label: "Seller",
+    description: "List and manage your own properties",
+    icon: Building2,
+  },
+  {
+    value: "agent",
+    label: "Agent",
+    description: "Real estate professional managing listings",
+    icon: BadgeCheck,
+  },
+];
+
 const initialFormData = {
+  role: "buyer",
   firstName: "",
   lastName: "",
   email: "",
@@ -122,15 +146,11 @@ function RegisterPage() {
           null,
 
         password: formData.password,
+        role: formData.role,
       });
 
-      navigate("/verify-email", {
-        state: {
-          email:
-            formData.email
-              .trim()
-              .toLowerCase(),
-        },
+      navigate("/", {
+        replace: true,
       });
     } catch (error) {
       setErrorMessage(error.message);
@@ -182,6 +202,34 @@ function RegisterPage() {
 
         {currentStep === 1 ? (
           <>
+        <div className="auth-field">
+          <label>I am registering as</label>
+
+          <div className="auth-role-grid">
+            {roleOptions.map(({ value, label, description, icon: Icon }) => (
+              <button
+                key={value}
+                type="button"
+                className={
+                  formData.role === value
+                    ? "auth-role-card auth-role-card--active"
+                    : "auth-role-card"
+                }
+                onClick={() =>
+                  setFormData((currentData) => ({
+                    ...currentData,
+                    role: value,
+                  }))
+                }
+              >
+                <Icon size={22} />
+                <strong>{label}</strong>
+                <span>{description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="auth-form__row">
           <div className="auth-field">
             <label htmlFor="firstName">

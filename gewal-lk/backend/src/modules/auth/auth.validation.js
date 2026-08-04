@@ -1,4 +1,11 @@
+import { USER_ROLES } from "../../constants/auth.constants.js";
 import { ApiError } from "../../utils/ApiError.js";
+
+const registrableRoles = [
+  USER_ROLES.BUYER,
+  USER_ROLES.SELLER,
+  USER_ROLES.AGENT,
+];
 
 const emailPattern =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +50,12 @@ export const validateRegistration = (
 
   const password =
     request.body.password;
+
+  const role = registrableRoles.includes(
+    request.body.role
+  )
+    ? request.body.role
+    : USER_ROLES.BUYER;
 
   const errors = [];
 
@@ -126,6 +139,7 @@ export const validateRegistration = (
     lastName,
     email,
     phone: phone || null,
+    role,
   };
 
   return next();

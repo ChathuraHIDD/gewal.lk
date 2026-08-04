@@ -23,7 +23,22 @@ import { AnimatePresence, motion } from "motion/react";
 import { UserCircle } from "@phosphor-icons/react";
 
 import fullLogo from "../../../assets/logos/gewal-full-logo.png";
+import { useAuth } from "../../../hooks/useAuth.js";
 import "./Header.css";
+
+const canPostProperty = (user) =>
+  Boolean(user?.roles?.some((role) => role === "seller" || role === "agent"));
+
+const isAdminUser = (user) =>
+  Boolean(user?.roles?.some((role) => role === "admin" || role === "super_admin"));
+
+const roleLabel = (user) => {
+  if (!user) return "";
+  if (isAdminUser(user)) return "Admin account";
+  if (user.roles?.includes("agent")) return "Agent account";
+  if (user.roles?.includes("seller")) return "Seller account";
+  return "Buyer account";
+};
 
 const navItems = [
   { label: "Buy", path: "/buy", menu: "buy" },
@@ -75,6 +90,7 @@ function Header() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
   return (
     <header className="market-header">
       <div className="market-header__top">
@@ -88,8 +104,14 @@ function Header() {
           <div className="market-header__top-actions">
             <button type="button"><Globe2 size={14} /> English</button>
             <button type="button"><Moon size={14} /> Theme</button>
-            <Link to="/login"><LogIn size={14} /> Login</Link>
-            <Link to="/register">Register</Link>
+            {isAuthenticated ? (
+              <button type="button" onClick={logout}><LogIn size={14} /> Logout</button>
+            ) : (
+              <>
+                <Link to="/login"><LogIn size={14} /> Login</Link>
+                <Link to="/register">Register</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -145,7 +167,9 @@ function Header() {
                 {notificationOpen && <NotificationMenu />}
               </AnimatePresence>
             </div>
-            <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
+            {canPostProperty(user) && (
+              <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
+            )}
             <div
               className="market-header__profile-wrap"
               onMouseEnter={() => {
@@ -167,7 +191,13 @@ function Header() {
                 <UserCircle size={23} weight="regular" />
               </button>
               <AnimatePresence>
-                {profileOpen && <ProfileMenu />}
+                {profileOpen && (
+                  <ProfileMenu
+                    user={user}
+                    isAuthenticated={isAuthenticated}
+                    logout={logout}
+                  />
+                )}
               </AnimatePresence>
             </div>
           </div>
@@ -254,7 +284,7 @@ function NotificationMenu() {
   );
 }
 
-function ProfileMenu() {
+function ProfileMenu({ user, isAuthenticated, logout }) {
   return (
     <motion.div
       className="market-header__profile-menu"
@@ -266,8 +296,8 @@ function ProfileMenu() {
       <div className="market-header__profile-head">
         <span><UserCircle size={22} weight="regular" /></span>
         <div>
-          <strong>Guest User</strong>
-          <small>Manage your property activity</small>
+          <strong>{isAuthenticated ? `${user?.firstName} ${user?.lastName}` : "Guest User"}</strong>
+          <small>{isAuthenticated ? roleLabel(user) : "Sign in to manage your account"}</small>
         </div>
       </div>
       <Link to="/properties"><Heart size={17} /> Saved Properties</Link>
@@ -275,7 +305,14 @@ function ProfileMenu() {
       <Link to="/messages"><MessageCircle size={17} /> Messages <em>3</em></Link>
       <Link to="/appointments"><CalendarDays size={17} /> Appointments</Link>
       <Link to="/dashboard"><UserRound size={17} /> Dashboard</Link>
+      {canPostProperty(user) && <Link to="/post-property"><Plus size={17} /> Post Property</Link>}
+      {isAdminUser(user) && <Link to="/admin"><UserCircle size={17} /> Admin Panel</Link>}
       <Link to="/contact"><HelpCircle size={17} /> Help Center</Link>
+      {isAuthenticated ? (
+        <button type="button" onClick={logout}><LogIn size={17} /> Logout</button>
+      ) : (
+        <Link to="/login"><LogIn size={17} /> Login</Link>
+      )}
     </motion.div>
   );
 }

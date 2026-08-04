@@ -51,7 +51,12 @@ export function AuthProvider({ children }) {
   }, [loadCurrentUser]);
 
   const register = async (formData) => {
-    return registerUser(formData);
+    const result = await registerUser(formData);
+
+    setUser(result.data.user);
+    setIsAuthenticated(true);
+
+    return result;
   };
 
   const verifyEmail = async ({

@@ -113,11 +113,18 @@ function App() {
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/appointments" element={<AppointmentsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
-        <Route path="/admin" element={<AdminPanelPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roles={["admin", "super_admin"]} redirectTo="/">
+              <AdminPanelPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/post-property"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute roles={["seller", "agent"]} redirectTo="/dashboard">
               <PostPropertyPage />
             </ProtectedRoute>
           }

@@ -1,248 +1,157 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   Bell,
-  BriefcaseBusiness,
   Building2,
   CalendarDays,
   ChevronDown,
-  Clock,
+  Globe2,
   Heart,
   HelpCircle,
   Home,
-  Languages,
-  LayoutDashboard,
-  LogOut,
+  LogIn,
   Menu,
   MessageCircle,
   Moon,
   Plus,
   Search,
-  Settings,
   SlidersHorizontal,
-  Sparkles,
   UserRound,
-  WalletCards,
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import fullLogo from "../../../assets/logos/gewal-full-logo.png";
-
 import "./Header.css";
 
-const mainLinks = [
-  { label: "Home", path: "/" },
+const navItems = [
+  { label: "Buy", path: "/buy", menu: "buy" },
+  { label: "Rent", path: "/rent", menu: "rent" },
+  { label: "Commercial", path: "/commercial", menu: "commercial" },
   { label: "New Projects", path: "/new-projects" },
   { label: "Agents", path: "/agents" },
+  { label: "Services", path: "/services", menu: "services" },
   { label: "Blog", path: "/blog" },
-  { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" },
 ];
 
 const megaMenus = {
-  Buy: [
-    ["Residential", "House", "Apartment", "Villa", "Townhouse", "Penthouse", "Duplex", "Annexe"],
-    ["Land", "Residential Land", "Commercial Land", "Agricultural Land"],
-    ["Commercial", "Office", "Shop", "Warehouse", "Factory", "Hotel"],
-    ["Luxury", "Beachfront", "Waterfront", "Luxury Villas", "Gated Communities"],
-    ["Special", "Featured Listings", "New Projects", "Price Reduced", "Auction Properties"],
-  ],
-  Rent: [
-    ["Rentals", "Residential Rentals", "Commercial Rentals", "Short-Term Rentals", "Luxury Rentals", "Student Accommodation", "Office Spaces", "Warehouse Rentals"],
-  ],
-  Commercial: [
-    ["Commercial", "Office", "Shop", "Warehouse", "Factory", "Hotel", "Co-working Spaces", "Investment Properties"],
-  ],
-  Services: [
-    ["Property Services", "Mortgage Calculator", "Property Valuation", "Home Loan", "Legal Services", "Insurance", "Moving Services", "Interior Designers", "Architects", "Property Management"],
-  ],
+  buy: {
+    title: "Buy Properties",
+    columns: [
+      ["Residential", "House", "Apartment", "Villa", "Townhouse", "Penthouse", "Annexe"],
+      ["Land", "Residential Land", "Commercial Land", "Agricultural Land"],
+      ["Popular", "Featured Listings", "New Projects", "Price Reduced", "Auction Properties"],
+    ],
+  },
+  rent: {
+    title: "Rent Properties",
+    columns: [
+      ["Residential Rentals", "Apartments", "Houses", "Luxury Rentals", "Short-Term Rentals"],
+      ["Commercial Rentals", "Office Spaces", "Shops", "Warehouse Rentals"],
+      ["Special", "Student Accommodation", "Furnished", "Pet Friendly"],
+    ],
+  },
+  commercial: {
+    title: "Commercial Real Estate",
+    columns: [
+      ["Property Type", "Office", "Shop", "Warehouse", "Factory", "Hotel"],
+      ["For Business", "Co-working Spaces", "Retail Space", "Investment Property"],
+      ["Locations", "Colombo", "Gampaha", "Kandy", "Galle"],
+    ],
+  },
+  services: {
+    title: "Property Services",
+    columns: [
+      ["Finance", "Mortgage Calculator", "Property Valuation", "Home Loan", "Insurance"],
+      ["Professional", "Legal Services", "Architects", "Interior Designers"],
+      ["Home", "Moving Services", "Property Management", "Home Inspection"],
+    ],
+  },
 };
 
-const suggestions = [
-  "Luxury villa in Colombo 07",
-  "Rajagiriya apartments",
-  "Nawala houses for sale",
-  "Galle beachfront villas",
-  "Kandy land",
-  "Commercial office Colombo Fort",
-];
-
-const profileItems = [
-  [LayoutDashboard, "Dashboard", "/dashboard"],
-  [Building2, "My Properties", "/dashboard"],
-  [Plus, "Post New Property", "/post-property"],
-  [Clock, "Draft Listings", "/dashboard"],
-  [Heart, "Saved Properties", "/properties"],
-  [Search, "Recently Viewed", "/dashboard"],
-  [SlidersHorizontal, "Compare Properties", "/properties"],
-  [CalendarDays, "Appointments", "/dashboard"],
-  [MessageCircle, "Messages", "/dashboard"],
-  [Bell, "Notifications", "/dashboard"],
-  [WalletCards, "Billing & Subscription", "/dashboard"],
-  [Sparkles, "Analytics", "/dashboard"],
-  [Settings, "Profile Settings", "/dashboard"],
-  [HelpCircle, "Help Center", "/contact"],
-];
-
-function BadgeIcon({ icon: Icon, label, badge, to = "/dashboard" }) {
-  return (
-    <Link to={to} className="premium-nav__icon" aria-label={label}>
-      <Icon size={18} />
-      {badge && <span>{badge}</span>}
-    </Link>
-  );
-}
-
 function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeMega, setActiveMega] = useState(null);
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [query, setQuery] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  const isLoggedIn = false;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 14);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const filteredSuggestions = useMemo(
-    () => suggestions.filter((item) => item.toLowerCase().includes(query.toLowerCase())).slice(0, 5),
-    [query]
-  );
-
-  const closeMobileMenu = () => setMobileMenuOpen(false);
-
   return (
-    <header className={scrolled ? "premium-nav premium-nav--scrolled" : "premium-nav"}>
-      <div className="container premium-nav__inner">
-        <Link to="/" className="premium-nav__logo" onClick={closeMobileMenu}>
-          <img src={fullLogo} alt="Gewal.lk" />
-        </Link>
-
-        <nav className="premium-nav__links" aria-label="Primary navigation">
-          {mainLinks.slice(0, 1).map((item) => (
-            <NavLink key={item.path} to={item.path}>{item.label}</NavLink>
-          ))}
-
-          {Object.keys(megaMenus).slice(0, 3).map((label) => (
-            <div
-              className="premium-nav__mega-wrap"
-              key={label}
-              onMouseEnter={() => setActiveMega(label)}
-              onMouseLeave={() => setActiveMega(null)}
-            >
-              <button type="button" aria-expanded={activeMega === label}>
-                {label} <ChevronDown size={14} />
-              </button>
-              <AnimatePresence>
-                {activeMega === label && <MegaMenu label={label} />}
-              </AnimatePresence>
-            </div>
-          ))}
-
-          {mainLinks.slice(1, 3).map((item) => (
-            <NavLink key={item.path} to={item.path}>{item.label}</NavLink>
-          ))}
-
-          <div
-            className="premium-nav__mega-wrap"
-            onMouseEnter={() => setActiveMega("Services")}
-            onMouseLeave={() => setActiveMega(null)}
-          >
-            <button type="button" aria-expanded={activeMega === "Services"}>
-              Services <ChevronDown size={14} />
-            </button>
-            <AnimatePresence>
-              {activeMega === "Services" && <MegaMenu label="Services" />}
-            </AnimatePresence>
+    <header className="market-header">
+      <div className="market-header__top">
+        <div className="container market-header__top-inner">
+          <div className="market-header__top-links">
+            <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
+            <Link to="/blog">Guides</Link>
+            <Link to="/agents">Find Agents</Link>
           </div>
-
-          {mainLinks.slice(3).map((item) => (
-            <NavLink key={item.path} to={item.path}>{item.label}</NavLink>
-          ))}
-        </nav>
-
-        <div className="premium-nav__search">
-          <Search size={18} />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => window.setTimeout(() => setSearchFocused(false), 140)}
-            placeholder="Title, city, district, area, landmark or postal code"
-            aria-label="Global property search"
-          />
-          <AnimatePresence>
-            {searchFocused && (
-              <motion.div
-                className="premium-nav__suggestions"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-              >
-                <strong>Search suggestions</strong>
-                {(query ? filteredSuggestions : suggestions.slice(0, 4)).map((item) => (
-                  <Link to="/properties" key={item}><Search size={14} /> {item}</Link>
-                ))}
-                <div>
-                  <span>Trending</span>
-                  {['Colombo', 'Rajagiriya', 'Galle'].map((item) => <Link key={item} to="/properties">{item}</Link>)}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="premium-nav__actions">
-          <BadgeIcon icon={Heart} label="Saved properties" to="/properties" />
-          <BadgeIcon icon={SlidersHorizontal} label="Compare properties" to="/properties" />
-          {isLoggedIn && <BadgeIcon icon={MessageCircle} label="Messages" badge="3" />}
-          {isLoggedIn && <BadgeIcon icon={Bell} label="Notifications" badge="6" />}
-          {isLoggedIn && <BadgeIcon icon={CalendarDays} label="Appointments" />}
-          <button className="premium-nav__icon" aria-label="Language selector"><Languages size={18} /></button>
-          <button className="premium-nav__icon" aria-label="Toggle dark mode"><Moon size={18} /></button>
-
-          {!isLoggedIn ? (
-            <>
-              <Link to="/login" className="premium-nav__text-link">Login</Link>
-              <Link to="/register" className="premium-nav__text-link">Register</Link>
-            </>
-          ) : null}
-
-          <Link to="/post-property" className="premium-nav__cta"><Plus size={17} /> Post Property</Link>
-
-          {isLoggedIn && (
-            <div className="premium-nav__profile">
-              <button onClick={() => setProfileOpen((open) => !open)} aria-expanded={profileOpen}>
-                <UserRound size={19} />
-              </button>
-              <AnimatePresence>{profileOpen && <ProfileDropdown />}</AnimatePresence>
-            </div>
-          )}
-        </div>
-
-        <div className="premium-nav__mobile-actions">
-          <button aria-label="Search"><Search size={20} /></button>
-          <button aria-label="Notifications"><Bell size={20} /><span>2</span></button>
-          <button
-            onClick={() => setMobileMenuOpen((value) => !value)}
-            aria-label="Toggle navigation"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
-          </button>
+          <div className="market-header__top-actions">
+            <button type="button"><Globe2 size={14} /> English</button>
+            <button type="button"><Moon size={14} /> Theme</button>
+            <Link to="/login"><LogIn size={14} /> Login</Link>
+            <Link to="/register">Register</Link>
+          </div>
         </div>
       </div>
 
-      <AnimatePresence>{mobileMenuOpen && <MobileDrawer closeMobileMenu={closeMobileMenu} />}</AnimatePresence>
+      <div className="market-header__main">
+        <div className="container market-header__main-inner">
+          <Link to="/" className="market-header__logo" aria-label="Gewal.lk home">
+            <img src={fullLogo} alt="Gewal.lk" />
+          </Link>
 
-      <nav className="premium-bottom-nav" aria-label="Mobile bottom navigation">
+          <nav className="market-header__nav" aria-label="Main navigation">
+            <NavLink to="/">Home</NavLink>
+            {navItems.map((item) => (
+              <div
+                key={item.label}
+                className="market-header__nav-item"
+                onMouseEnter={() => item.menu && setActiveMenu(item.menu)}
+                onMouseLeave={() => setActiveMenu(null)}
+              >
+                <NavLink to={item.path}>
+                  {item.label}
+                  {item.menu && <ChevronDown size={14} />}
+                </NavLink>
+                <AnimatePresence>
+                  {activeMenu === item.menu && <MegaMenu menu={megaMenus[item.menu]} />}
+                </AnimatePresence>
+              </div>
+            ))}
+          </nav>
+
+          <div className="market-header__user-actions">
+            <Link to="/dashboard" className="market-header__badge" aria-label="Notifications"><Bell size={19} /><i>5</i></Link>
+            <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
+            <div className="market-header__profile-wrap">
+              <button
+                type="button"
+                className="market-header__avatar"
+                aria-label="Open profile menu"
+                aria-expanded={profileOpen}
+                onClick={() => setProfileOpen((open) => !open)}
+              >
+                <UserRound size={19} />
+              </button>
+              <AnimatePresence>
+                {profileOpen && <ProfileMenu />}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          <div className="market-header__mobile-buttons">
+            <button aria-label="Search"><Search size={21} /></button>
+            <button aria-label="Notifications"><Bell size={21} /></button>
+            <button aria-label="Menu" onClick={() => setMobileOpen((open) => !open)}>
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {mobileOpen && <MobileDrawer close={() => setMobileOpen(false)} />}
+      </AnimatePresence>
+
+      <nav className="market-bottom-nav" aria-label="Mobile bottom navigation">
         <Link to="/"><Home size={19} />Home</Link>
         <Link to="/properties"><Search size={19} />Search</Link>
         <Link to="/properties"><Heart size={19} />Saved</Link>
@@ -253,24 +162,27 @@ function Header() {
   );
 }
 
-function MegaMenu({ label }) {
+function MegaMenu({ menu }) {
   return (
     <motion.div
-      className="premium-nav__mega"
-      initial={{ opacity: 0, y: 12, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 12, scale: 0.98 }}
+      className="market-header__mega"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.18 }}
     >
-      <div className="premium-nav__mega-head">
-        <BriefcaseBusiness size={19} />
-        <div><strong>{label}</strong><span>Explore curated property options</span></div>
+      <div className="market-header__mega-title">
+        <Building2 size={20} />
+        <div>
+          <strong>{menu.title}</strong>
+          <span>Browse curated property categories</span>
+        </div>
       </div>
-      <div className="premium-nav__mega-grid">
-        {megaMenus[label].map(([title, ...items]) => (
+      <div className="market-header__mega-grid">
+        {menu.columns.map(([title, ...items]) => (
           <div key={title}>
             <h4>{title}</h4>
-            {items.map((item) => <Link key={item} to="/properties">{item}</Link>)}
+            {items.map((item) => <Link to="/properties" key={item}>{item}</Link>)}
           </div>
         ))}
       </div>
@@ -278,36 +190,46 @@ function MegaMenu({ label }) {
   );
 }
 
-function ProfileDropdown() {
+function ProfileMenu() {
   return (
     <motion.div
-      className="premium-nav__profile-menu"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
+      className="market-header__profile-menu"
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.98 }}
+      transition={{ duration: 0.16 }}
     >
-      {profileItems.map(([Icon, label, path]) => <Link key={label} to={path}><Icon size={17} /> {label}</Link>)}
-      <button><LogOut size={17} /> Logout</button>
+      <div className="market-header__profile-head">
+        <span><UserRound size={18} /></span>
+        <div>
+          <strong>Guest User</strong>
+          <small>Manage your property activity</small>
+        </div>
+      </div>
+      <Link to="/properties"><Heart size={17} /> Saved Properties</Link>
+      <Link to="/properties"><SlidersHorizontal size={17} /> Compare Properties</Link>
+      <Link to="/dashboard"><MessageCircle size={17} /> Messages <em>3</em></Link>
+      <Link to="/dashboard"><CalendarDays size={17} /> Appointments</Link>
+      <Link to="/dashboard"><UserRound size={17} /> Dashboard</Link>
+      <Link to="/contact"><HelpCircle size={17} /> Help Center</Link>
     </motion.div>
   );
 }
 
-function MobileDrawer({ closeMobileMenu }) {
-  const links = ["Home", "Buy", "Rent", "Commercial", "New Projects", "Agents", "Services", "Blog", "Contact", "Saved", "Compare", "Appointments", "Dashboard", "Settings", "Logout"];
+function MobileDrawer({ close }) {
+  const items = ["Home", "Buy", "Rent", "Commercial", "New Projects", "Agents", "Services", "Blog", "Contact", "Saved", "Compare", "Appointments", "Dashboard", "Settings"];
 
   return (
     <motion.div
-      className="premium-nav__drawer"
-      initial={{ opacity: 0, y: -16 }}
+      className="market-header__drawer"
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
+      exit={{ opacity: 0, y: -12 }}
     >
       <div className="container">
-        <div className="premium-nav__drawer-search"><Search size={18} /><input placeholder="Search properties" /></div>
-        {links.map((label) => (
-          <Link key={label} to={label === "Home" ? "/" : "/properties"} onClick={closeMobileMenu}>{label}</Link>
-        ))}
-        <Link to="/post-property" onClick={closeMobileMenu} className="premium-nav__drawer-cta"><Plus size={17} /> Post Property</Link>
+        <div className="market-header__drawer-search"><Search size={18} /><input placeholder="Search properties" /></div>
+        {items.map((item) => <Link key={item} to={item === "Home" ? "/" : "/properties"} onClick={close}>{item}</Link>)}
+        <Link to="/post-property" onClick={close} className="market-header__drawer-post"><Plus size={18} /> Post Property</Link>
       </div>
     </motion.div>
   );

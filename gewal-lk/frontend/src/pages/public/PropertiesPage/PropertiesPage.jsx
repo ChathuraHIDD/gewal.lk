@@ -100,9 +100,13 @@ function PropertiesPage() {
   return (
     <main className="property-detail-page">
       <section className="property-detail container">
-        <Link to="/properties" className="property-detail__back">
-          <ChevronLeft size={16} /> Back to Search
-        </Link>
+        <nav className="property-detail__breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <Link to="/properties">Property List</Link>
+          <span>/</span>
+          <span>{property.title}</span>
+        </nav>
 
         <div className="property-detail__topbar">
           <div>

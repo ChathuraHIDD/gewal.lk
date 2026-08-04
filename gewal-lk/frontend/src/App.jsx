@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Route,
   Routes,
@@ -34,6 +35,16 @@ const authenticationPaths = [
   "/reset-password",
 ];
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const location = useLocation();
 
@@ -44,6 +55,7 @@ function App() {
 
   return (
     <div className="app">
+      <ScrollToTop />
       {!isAuthenticationPage && (
         <Header />
       )}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Award,
   CalendarDays,
@@ -41,7 +42,12 @@ function AgentProfilePage() {
         <div className="container agent-cover__inner">
           <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=240&q=85" alt="Agent Danial Doe" />
           <div>
-            <span><CheckCircle2 size={16} /> Verified Pro Agent</span>
+            <nav className="agent-breadcrumb" aria-label="Breadcrumb">
+              <Link to="/">Home</Link>
+              <span>/</span>
+              <span>Agents</span>
+            </nav>
+            <span className="agent-verified"><CheckCircle2 size={16} /> Verified Pro Agent</span>
             <h1>Danial Doe</h1>
             <p>Senior Real Estate Consultant at Exquisite Properties, LLC</p>
             <div className="agent-cover__meta">

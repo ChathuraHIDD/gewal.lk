@@ -541,3 +541,243 @@
     grid-template-columns: 1fr;
   }
 }
+
+.property-detail__actions button.is-active {
+  color: #fff;
+  border-color: #6d28d9;
+  background: #6d28d9;
+}
+
+.gallery-card__thumb {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.gallery-card__thumb.is-active {
+  outline: 3px solid #6d28d9;
+  outline-offset: 2px;
+}
+
+.amenity-grid,
+.nearby-grid,
+.related-properties-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.amenity-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.amenity-grid span,
+.nearby-grid span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #e8e0f1;
+  border-radius: 14px;
+  color: #44384f;
+  background: #fff;
+  font-weight: 800;
+}
+
+.amenity-grid svg {
+  color: #0f8f84;
+}
+
+.mortgage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.mortgage-grid label,
+.mortgage-grid > div {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #e8e0f1;
+  border-radius: 16px;
+  background: #fff;
+  color: #5f536d;
+  font-weight: 800;
+}
+
+.mortgage-grid input {
+  width: 100%;
+  accent-color: #6d28d9;
+}
+
+.mortgage-grid strong {
+  color: #17121f;
+}
+
+.mortgage-grid > div strong {
+  color: #6d28d9;
+  font-size: 1.2rem;
+}
+
+.nearby-grid {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 14px;
+}
+
+.related-properties-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tour-card__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 18px 0;
+}
+
+.tour-card__fields label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: #f6f6f3;
+  color: #0f8f84;
+}
+
+.tour-card__fields input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #2d2d30;
+  font-weight: 760;
+}
+
+.sidebar-card__secondary,
+.sidebar-card__contact,
+.sidebar-card__whatsapp {
+  text-decoration: none;
+}
+
+.sidebar-card__secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.sidebar-card__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 10px;
+  border-radius: 8px;
+  color: #fff;
+  background: #25d366;
+  font-weight: 850;
+}
+
+.appointment-success {
+  margin-top: 12px !important;
+  padding: 10px;
+  border-radius: 10px;
+  color: #0f8f84 !important;
+  background: #e7f5f2;
+  font-weight: 800;
+}
+
+.report-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border: 1px solid #e8e0f1;
+  border-radius: 12px;
+  color: #6d28d9;
+  background: #fff;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.report-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 12, 25, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.report-modal__card {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 440px);
+  padding: 24px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+}
+
+.report-modal__card h3 {
+  margin: 0;
+  color: #17121f;
+}
+
+.report-modal__card select,
+.report-modal__card textarea {
+  width: 100%;
+  border: 1px solid #e8e0f1;
+  border-radius: 14px;
+  padding: 12px;
+  outline: 0;
+  font: inherit;
+}
+
+.report-modal__card div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.report-modal__card button {
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.report-modal__card button:first-child {
+  color: #6d28d9;
+  background: #f4edff;
+}
+
+.report-modal__card button:last-child {
+  color: #fff;
+  background: #6d28d9;
+}
+
+@media (max-width: 900px) {
+  .amenity-grid,
+  .mortgage-grid,
+  .nearby-grid,
+  .related-properties-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .amenity-grid,
+  .mortgage-grid,
+  .nearby-grid,
+  .related-properties-grid,
+  .tour-card__fields {
+    grid-template-columns: 1fr;
+  }
+}

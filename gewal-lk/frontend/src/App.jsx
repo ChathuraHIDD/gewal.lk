@@ -12,6 +12,7 @@ import StaticPage from "./pages/public/StaticPage/StaticPage.jsx";
 import PostPropertyPage from "./pages/property/PostPropertyPage/PostPropertyPage.jsx";
 import UserDashboardPage from "./pages/dashboard/UserDashboardPage/UserDashboardPage.jsx";
 import AgentProfilePage from "./pages/agents/AgentProfilePage/AgentProfilePage.jsx";
+import AdminPanelPage from "./pages/admin/AdminPanelPage/AdminPanelPage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -65,7 +66,7 @@ function App() {
         <Route path="/about" element={<StaticPage page="about" />} />
         <Route path="/contact" element={<StaticPage page="contact" />} />
         <Route path="/dashboard" element={<UserDashboardPage />} />
-        <Route path="/admin" element={<StaticPage page="admin" />} />
+        <Route path="/admin" element={<AdminPanelPage />} />
         <Route path="/post-property" element={<PostPropertyPage />} />
 
         <Route

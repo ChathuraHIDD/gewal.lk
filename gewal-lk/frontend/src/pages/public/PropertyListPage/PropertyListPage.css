@@ -1,0 +1,237 @@
+.property-list-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fbfaff 0%, #f3effb 100%);
+}
+
+.property-list-hero {
+  padding: 58px 0 38px;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(109, 40, 217, 0.18), transparent 32%),
+    linear-gradient(135deg, #17111f 0%, #321858 55%, #6d28d9 100%);
+  color: #fff;
+}
+
+.property-list-hero .container > span {
+  color: #d8c6ff;
+  font-size: 0.8rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.property-list-hero h1 {
+  max-width: 760px;
+  margin: 10px 0;
+  font-size: clamp(2.4rem, 5vw, 4.9rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.property-list-hero p {
+  max-width: 680px;
+  margin-bottom: 28px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.property-list-shell {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  gap: 24px;
+  padding-block: 34px 80px;
+}
+
+.property-list-sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+  display: grid;
+  align-self: start;
+  gap: 16px;
+}
+
+.sidebar-filter-card {
+  padding: 20px;
+  border: 1px solid #e8e0f1;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 42px rgba(48, 24, 73, 0.08);
+}
+
+.sidebar-filter-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: #17121f;
+}
+
+.sidebar-filter-card label,
+.sidebar-filter-card button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  color: #5f536d;
+  background: transparent;
+  font-weight: 750;
+  text-align: left;
+}
+
+.property-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid #e8e0f1;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 42px rgba(48, 24, 73, 0.06);
+}
+
+.property-list-toolbar strong,
+.property-list-toolbar span {
+  display: block;
+}
+
+.property-list-toolbar strong {
+  color: #17121f;
+}
+
+.property-list-toolbar span {
+  color: #7b7285;
+  font-size: 0.9rem;
+}
+
+.property-list-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.property-list-toolbar select,
+.property-list-toolbar button {
+  min-height: 42px;
+  border: 1px solid #e4d8f4;
+  border-radius: 13px;
+  color: #5f536d;
+  background: #fff;
+  font-weight: 850;
+}
+
+.property-list-toolbar select {
+  padding-inline: 12px;
+}
+
+.property-list-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-inline: 12px;
+  cursor: pointer;
+}
+
+.property-list-toolbar button.is-active {
+  color: #fff;
+  border-color: #6d28d9;
+  background: #6d28d9;
+}
+
+.property-list-map {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 270px;
+  margin-bottom: 20px;
+  border: 1px solid #e4d8f4;
+  border-radius: 24px;
+  color: #6d28d9;
+  background:
+    linear-gradient(rgba(109, 40, 217, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px),
+    #fff;
+  background-size: 34px 34px;
+}
+
+.property-list-map span {
+  color: #5f536d;
+  font-weight: 900;
+}
+
+.property-list-map button {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: #6d28d9;
+  font-weight: 900;
+}
+
+.property-result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.property-result-list {
+  display: grid;
+  gap: 18px;
+}
+
+.property-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 34px;
+}
+
+.property-pagination button {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 13px;
+  border-radius: 13px;
+  color: #6d28d9;
+  border: 1px solid #e4d8f4;
+  background: #fff;
+  font-weight: 900;
+}
+
+.property-pagination button.is-active {
+  color: #fff;
+  background: #6d28d9;
+}
+
+@media (max-width: 1180px) {
+  .property-result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 920px) {
+  .property-list-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .property-list-sidebar {
+    position: static;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .property-list-hero {
+    padding-top: 42px;
+  }
+
+  .property-list-sidebar,
+  .property-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .property-list-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

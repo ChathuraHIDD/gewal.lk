@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
+  Bell,
+  Heart,
+  Languages,
   Menu,
+  MessageCircle,
+  Moon,
+  Search,
+  SlidersHorizontal,
   UserRound,
   X,
 } from "lucide-react";
@@ -14,11 +21,11 @@ import "./Header.css";
 const navigationItems = [
   { label: "Home", path: "/" },
   { label: "Buy", path: "/buy" },
-  { label: "Sell", path: "/sell" },
   { label: "Rent", path: "/rent" },
+  { label: "Commercial", path: "/commercial" },
   { label: "Agents", path: "/agents" },
-  { label: "Properties", path: "/properties" },
-  { label: "Contact", path: "/contact" },
+  { label: "New Projects", path: "/new-projects" },
+  { label: "Blog", path: "/blog" },
 ];
 
 function Header() {
@@ -59,12 +66,25 @@ function Header() {
           ))}
         </nav>
 
+        <div className="header__search">
+          <Search size={17} />
+          <input placeholder="Search properties" aria-label="Search properties" />
+        </div>
+
         <div className="header__actions">
+          <Link to="/properties" className="header__icon-button" aria-label="Saved properties"><Heart size={19} /></Link>
+          <Link to="/properties" className="header__icon-button" aria-label="Compare"><SlidersHorizontal size={19} /></Link>
+          <Link to="/dashboard" className="header__icon-button" aria-label="Notifications"><Bell size={19} /></Link>
+          <Link to="/dashboard" className="header__icon-button" aria-label="Messages"><MessageCircle size={19} /></Link>
+          <button className="header__icon-button" aria-label="Language selector"><Languages size={19} /></button>
+          <button className="header__icon-button" aria-label="Toggle dark mode"><Moon size={19} /></button>
+          <Link to="/login" className="header__login">Login</Link>
+          <Link to="/register" className="header__login">Register</Link>
           <Link
-            to="/register"
+            to="/post-property"
             className="header__post-button"
           >
-            <span>Get Started</span>
+            <span>Post Property</span>
           </Link>
         </div>
 

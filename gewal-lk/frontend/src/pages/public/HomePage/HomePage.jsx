@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Bath,
@@ -24,6 +25,7 @@ const heroImage =
 
 const listings = [
   {
+    id: "luxury-villa-nawala",
     image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85",
     badge: "For Sale",
     title: "Luxury Villa",
@@ -32,6 +34,7 @@ const listings = [
     facts: "5 beds · 4 baths · 4,250 sqft",
   },
   {
+    id: "skyline-apartment-rajagiriya",
     image: "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=85",
     badge: "For Rent",
     title: "Skyline Apartment",
@@ -40,6 +43,7 @@ const listings = [
     facts: "3 beds · 2 baths · 1,950 sqft",
   },
   {
+    id: "modern-residence-battaramulla",
     image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=900&q=85",
     badge: "Featured",
     title: "Modern Residence",
@@ -117,19 +121,26 @@ function HomePage() {
           <div className="minimal-listing-grid">
             {listings.map((item, index) => (
               <article key={item.title} className="minimal-listing-card">
-                <div>
-                  <img src={item.image} alt={item.title} />
-                  <span>{item.badge}</span>
-                  <button onClick={() => setLiked(liked === index ? null : index)} aria-label="Save property">
-                    <Heart size={18} fill={liked === index ? "currentColor" : "none"} />
-                  </button>
-                </div>
-                <section>
-                  <h3>{item.title}</h3>
-                  <strong>{item.price}</strong>
-                  <p>{item.location}</p>
-                  <small>{item.facts}</small>
-                </section>
+                <Link to={`/properties/${item.id}`} className="minimal-listing-card__link" aria-label={`View ${item.title} details`}>
+                  <div className="minimal-listing-card__media">
+                    <img src={item.image} alt={item.title} />
+                    <span>{item.badge}</span>
+                  </div>
+                  <section>
+                    <h3>{item.title}</h3>
+                    <strong>{item.price}</strong>
+                    <p>{item.location}</p>
+                    <small>{item.facts}</small>
+                  </section>
+                </Link>
+                <button
+                  className="minimal-listing-card__favorite"
+                  type="button"
+                  onClick={() => setLiked(liked === index ? null : index)}
+                  aria-label="Save property"
+                >
+                  <Heart size={18} fill={liked === index ? "currentColor" : "none"} />
+                </button>
               </article>
             ))}
           </div>

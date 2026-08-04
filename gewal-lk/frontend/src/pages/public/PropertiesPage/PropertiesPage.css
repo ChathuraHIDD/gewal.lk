@@ -781,3 +781,28 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Detail page breadcrumb path */
+.property-detail__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 28px;
+  color: #8b8376;
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.property-detail__breadcrumb a {
+  color: #625d54;
+  text-decoration: none;
+}
+
+.property-detail__breadcrumb a:hover {
+  color: #a23cff;
+}
+
+.property-detail__breadcrumb span:last-child {
+  color: #171713;
+}

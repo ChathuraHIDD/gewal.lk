@@ -936,3 +936,48 @@
     font-size: 0.86rem;
   }
 }
+
+/* Purple active navigation state across every page */
+.market-header__nav > a,
+.market-header__nav-item > a {
+  position: relative;
+}
+
+.market-header__nav > a.active,
+.market-header__nav-item > a.active {
+  color: #a23cff !important;
+}
+
+.market-header__nav > a.active::before,
+.market-header__nav-item > a.active::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 13px;
+  height: 2px;
+  border-radius: 999px;
+  background: #a23cff;
+  content: "";
+}
+
+.market-header__nav > a:hover,
+.market-header__nav-item > a:hover {
+  color: #a23cff !important;
+}
+
+.market-header__nav-item > a.active svg,
+.market-header__nav-item > a:hover svg {
+  color: #a23cff;
+}
+
+.market-bottom-nav a.active,
+.market-bottom-nav a:hover {
+  color: #a23cff !important;
+}
+
+.market-header__mega-grid a:hover,
+.market-header__profile-menu a:hover,
+.market-header__profile-menu button:hover,
+.market-header__notification-head a:hover {
+  color: #a23cff !important;
+}

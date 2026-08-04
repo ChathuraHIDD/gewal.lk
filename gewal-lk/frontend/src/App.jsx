@@ -16,6 +16,8 @@ import AdminPanelPage from "./pages/admin/AdminPanelPage/AdminPanelPage.jsx";
 import BlogPage from "./pages/blog/BlogPage/BlogPage.jsx";
 import ContactPage from "./pages/public/ContactPage/ContactPage.jsx";
 import AboutPage from "./pages/public/AboutPage/AboutPage.jsx";
+import NewProjectsPage from "./pages/projects/NewProjectsPage/NewProjectsPage.jsx";
+import CommercialPage from "./pages/commercial/CommercialPage/CommercialPage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -61,10 +63,10 @@ function App() {
 
         <Route path="/buy" element={<PropertyListPage />} />
         <Route path="/rent" element={<PropertyListPage />} />
-        <Route path="/commercial" element={<StaticPage page="commercial" />} />
+        <Route path="/commercial" element={<CommercialPage />} />
         <Route path="/agents" element={<AgentProfilePage />} />
         <Route path="/agents/:id" element={<AgentProfilePage />} />
-        <Route path="/new-projects" element={<StaticPage page="new-projects" />} />
+        <Route path="/new-projects" element={<NewProjectsPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />

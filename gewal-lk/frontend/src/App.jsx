@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Route,
   Routes,
@@ -26,6 +26,7 @@ import NotificationsPage from "./pages/notifications/NotificationsPage/Notificat
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
 import VerifyEmailPage from "./pages/auth/VerifyEmailPage/VerifyEmailPage.jsx";
+import { CaretUp } from "@phosphor-icons/react";
 
 const authenticationPaths = [
   "/login",
@@ -43,6 +44,28 @@ function ScrollToTop() {
   }, [pathname]);
 
   return null;
+}
+
+function GlobalBackToTop() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 520);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <button
+      className={visible ? "global-back-to-top is-visible" : "global-back-to-top"}
+      type="button"
+      aria-label="Back to top"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    >
+      <CaretUp size={22} weight="bold" />
+    </button>
+  );
 }
 
 function App() {
@@ -107,6 +130,8 @@ function App() {
           element={<VerifyEmailPage />}
         />
       </Routes>
+
+      {!isAuthenticationPage && <GlobalBackToTop />}
     </div>
   );
 }

@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { UserCircle } from "@phosphor-icons/react";
 
 import fullLogo from "../../../assets/logos/gewal-full-logo.png";
 import "./Header.css";
@@ -163,7 +164,7 @@ function Header() {
                   setNotificationOpen(false);
                 }}
               >
-                <UserRound size={19} />
+                <UserCircle size={23} weight="regular" />
               </button>
               <AnimatePresence>
                 {profileOpen && <ProfileMenu />}
@@ -263,7 +264,7 @@ function ProfileMenu() {
       transition={{ duration: 0.16 }}
     >
       <div className="market-header__profile-head">
-        <span><UserRound size={18} /></span>
+        <span><UserCircle size={22} weight="regular" /></span>
         <div>
           <strong>Guest User</strong>
           <small>Manage your property activity</small>

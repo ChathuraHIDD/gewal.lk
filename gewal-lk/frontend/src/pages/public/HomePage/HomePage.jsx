@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import * as THREE from "three";
 import {
   ArrowRight,
   Bath,
@@ -7,7 +8,6 @@ import {
   CheckCircle2,
   Headphones,
   Heart,
-  Home,
   Mail,
   MapPin,
   Phone,
@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   UsersRound,
 } from "lucide-react";
+import { Buildings, SealCheck, UsersThree } from "@phosphor-icons/react";
 
 import PropertySearchFilter from "../../../components/property/PropertySearchFilter.jsx";
 import fullLogo from "../../../assets/logos/gewal-full-logo.png";
@@ -60,11 +61,148 @@ const trust = [
   [Headphones, "24/7 Customer Support", "Helpful guidance whenever you need it."],
 ];
 
+const stats = [
+  { icon: Buildings, value: 10400, suffix: "+", label: "Live listings" },
+  { icon: UsersThree, value: 280, suffix: "+", label: "Verified agents" },
+  { icon: SealCheck, value: 24, suffix: "/7", label: "Support" },
+];
+
+function AnimatedNumber({ value, suffix = "" }) {
+  const [count, setCount] = useState(1);
+  const [started, setStarted] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!started) return undefined;
+
+    const duration = 1400;
+    const start = performance.now();
+    const from = 1;
+
+    const frame = (time) => {
+      const progress = Math.min((time - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(from + (value - from) * eased));
+
+      if (progress < 1) requestAnimationFrame(frame);
+    };
+
+    const animation = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(animation);
+  }, [started, value]);
+
+  return <strong ref={ref}>{count.toLocaleString()}{suffix}</strong>;
+}
+
 function HomePage() {
   const [liked, setLiked] = useState(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.z = 6;
+
+    const particles = 140;
+    const positions = new Float32Array(particles * 3);
+    const sizes = new Float32Array(particles);
+
+    for (let index = 0; index < particles; index += 1) {
+      positions[index * 3] = (Math.random() - 0.5) * 7;
+      positions[index * 3 + 1] = (Math.random() - 0.5) * 4.2;
+      positions[index * 3 + 2] = (Math.random() - 0.5) * 2;
+      sizes[index] = Math.random() * 0.04 + 0.018;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+
+    const material = new THREE.PointsMaterial({
+      color: 0xa23cff,
+      size: 0.035,
+      transparent: true,
+      opacity: 0.5,
+      depthWrite: false,
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    const lineGeometry = new THREE.BufferGeometry();
+    const linePositions = new Float32Array([
+      -2.8, -0.8, 0,
+      -1.7, 0.5, 0,
+      -0.4, -0.2, 0,
+      0.9, 0.7, 0,
+      2.5, -0.5, 0,
+    ]);
+    lineGeometry.setAttribute("position", new THREE.BufferAttribute(linePositions, 3));
+    const line = new THREE.Line(
+      lineGeometry,
+      new THREE.LineBasicMaterial({ color: 0xa23cff, transparent: true, opacity: 0.16 })
+    );
+    scene.add(line);
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      const width = parent?.clientWidth || 600;
+      const height = parent?.clientHeight || 300;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    let animationId = 0;
+    const animate = () => {
+      animationId = requestAnimationFrame(animate);
+      points.rotation.y += 0.0014;
+      points.rotation.x = Math.sin(performance.now() * 0.00035) * 0.08;
+      line.rotation.z = Math.sin(performance.now() * 0.0005) * 0.035;
+      renderer.render(scene, camera);
+    };
+
+    resize();
+    animate();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resize);
+      geometry.dispose();
+      material.dispose();
+      lineGeometry.dispose();
+      line.material.dispose();
+      renderer.dispose();
+    };
+  }, []);
 
   return (
     <main className="minimal-home">
+      <div className="minimal-three-bg" aria-hidden="true"><canvas ref={canvasRef} /></div>
       <section className="minimal-hero">
         <div className="container minimal-hero__inner">
           <div className="minimal-hero__copy">
@@ -78,11 +216,6 @@ function HomePage() {
 
             <PropertySearchFilter />
 
-            <div className="minimal-stats">
-              <div><strong>10,400</strong><span>Live listings</span></div>
-              <div><strong>280</strong><span>Verified agents</span></div>
-              <div><strong>24/7</strong><span>Support</span></div>
-            </div>
           </div>
 
           <div className="minimal-hero__visual">
@@ -93,6 +226,18 @@ function HomePage() {
               <strong>Rs. 186M</strong>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="minimal-stats-section">
+        <div className="container minimal-stats">
+          {stats.map(({ icon: Icon, value, suffix, label }) => (
+            <div key={label}>
+              <span><Icon size={22} weight="duotone" /></span>
+              <AnimatedNumber value={value} suffix={suffix} />
+              <small>{label}</small>
+            </div>
+          ))}
         </div>
       </section>
 

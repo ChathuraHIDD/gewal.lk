@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -82,6 +84,11 @@ app.use(
 if (environment.isDevelopment) {
   app.use(morgan("dev"));
 }
+
+app.use(
+  "/uploads",
+  express.static(path.resolve("uploads"))
+);
 
 app.use("/api", apiRateLimiter);
 

@@ -109,6 +109,8 @@ const propertySchema = new Schema(
     contactName: { type: String, trim: true, default: null },
     contactPhone: { type: String, trim: true, default: null },
     contactEmail: { type: String, trim: true, lowercase: true, default: null },
+    seoTitle: { type: String, trim: true, default: null },
+    seoDescription: { type: String, trim: true, default: null },
     featured: { type: Boolean, default: false, index: true },
     premium: { type: Boolean, default: false, index: true },
     urgentSale: { type: Boolean, default: false, index: true },
@@ -128,7 +130,7 @@ const propertyLocationSchema = new Schema(
     street: { type: String, trim: true, default: null },
     googlePlaceId: { type: String, trim: true, default: null, index: true },
     coordinates: {
-      type: { type: String, enum: ["Point"], default: "Point" },
+      type: { type: String, enum: ["Point"] },
       coordinates: { type: [Number], default: undefined },
     },
   },

@@ -26,6 +26,14 @@ const handleMongooseValidationError = (error) => {
   });
 };
 
+const handleMulterError = (error) => {
+  return new ApiError({
+    statusCode: 422,
+    message: error.message || "File upload failed",
+    code: `UPLOAD_${error.code}`,
+  });
+};
+
 const handleDuplicateKeyError = (error) => {
   const duplicateField = Object.keys(error.keyValue || {})[0];
 
@@ -62,6 +70,10 @@ export const globalErrorHandler = (
 
   if (error?.code === 11000) {
     normalisedError = handleDuplicateKeyError(error);
+  }
+
+  if (error.name === "MulterError") {
+    normalisedError = handleMulterError(error);
   }
 
   const statusCode = normalisedError.statusCode || 500;

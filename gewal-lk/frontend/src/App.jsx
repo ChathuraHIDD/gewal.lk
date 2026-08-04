@@ -11,6 +11,7 @@ import PropertiesPage from "./pages/public/PropertiesPage/PropertiesPage.jsx";
 import PropertyListPage from "./pages/public/PropertyListPage/PropertyListPage.jsx";
 import StaticPage from "./pages/public/StaticPage/StaticPage.jsx";
 import PostPropertyPage from "./pages/property/PostPropertyPage/PostPropertyPage.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import UserDashboardPage from "./pages/dashboard/UserDashboardPage/UserDashboardPage.jsx";
 import AgentProfilePage from "./pages/agents/AgentProfilePage/AgentProfilePage.jsx";
 import AdminPanelPage from "./pages/admin/AdminPanelPage/AdminPanelPage.jsx";
@@ -113,7 +114,14 @@ function App() {
         <Route path="/appointments" element={<AppointmentsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/admin" element={<AdminPanelPage />} />
-        <Route path="/post-property" element={<PostPropertyPage />} />
+        <Route
+          path="/post-property"
+          element={
+            <ProtectedRoute>
+              <PostPropertyPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/login"

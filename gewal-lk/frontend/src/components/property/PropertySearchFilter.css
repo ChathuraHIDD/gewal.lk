@@ -1,179 +1,183 @@
 .property-filter {
-  width: 100%;
-  max-width: 1220px;
+  width: min(100%, 610px);
   margin-inline: auto;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(26px);
-  box-shadow: 0 34px 90px rgba(19, 8, 38, 0.28);
+  border: 1px solid rgba(226, 218, 238, 0.9);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 14px 34px rgba(27, 18, 42, 0.16);
+  backdrop-filter: blur(18px);
 }
 
-.property-filter__default {
-  display: grid;
-  grid-template-columns: 230px minmax(240px, 1.2fr) minmax(210px, 0.9fr) 170px;
-  grid-template-areas:
-    "type location property search"
-    "price price bedrooms more";
-  gap: 12px;
-  align-items: end;
+.property-filter__default--compact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.filter-segment { grid-area: type; }
-.filter-autocomplete { grid-area: location; }
-.filter-multiselect { grid-area: property; }
-.range-filter { grid-area: price; }
-.filter-chip-field { grid-area: bedrooms; }
-.property-filter__search { grid-area: search; }
-.property-filter__more { grid-area: more; }
-
-.filter-segment {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  min-height: 60px;
-  padding: 6px;
-  border-radius: 20px;
-  background: #f2eafd;
+.property-filter__tabs {
+  display: flex;
+  align-items: center;
+  gap: 22px;
 }
 
-.filter-segment button,
-.property-filter__more,
-.property-filter__search,
-.filter-multiselect > button,
-.filter-chips button,
-.map-search-card button,
-.radius-card button {
+.property-filter__tabs button {
+  position: relative;
+  min-height: 30px;
+  padding: 0 0 10px;
+  color: #5f6368;
+  background: transparent;
+  font-size: 0.96rem;
+  font-weight: 850;
   cursor: pointer;
 }
 
-.filter-segment button {
-  border-radius: 16px;
-  color: #62586d;
+.property-filter__tabs button::after {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
   background: transparent;
-  font-weight: 900;
-  transition: 180ms ease;
+  content: "";
 }
 
-.filter-segment button.is-active {
+.property-filter__tabs button.is-active {
+  color: #17121f;
+}
+
+.property-filter__tabs button.is-active::after {
+  background: #6d28d9;
+}
+
+.property-filter__commercial-link {
+  display: none !important;
+}
+
+.property-filter__search-line {
+  display: grid;
+  grid-template-columns: 1fr 118px;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.property-filter__default--compact .filter-autocomplete {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #9ca3af;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.property-filter__default--compact .filter-autocomplete > svg {
+  position: static;
+  flex-shrink: 0;
+  color: #17121f;
+}
+
+.property-filter__default--compact .filter-autocomplete input {
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  border-radius: 0;
+  color: #36313d;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.property-filter__default--compact .filter-autocomplete input::placeholder {
+  color: #6b7280;
+}
+
+.property-filter__search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 18px;
   color: #fff;
   background: linear-gradient(135deg, #6d28d9, #9333ea);
-  box-shadow: 0 14px 28px rgba(109, 40, 217, 0.28);
-}
-
-.filter-autocomplete,
-.filter-multiselect,
-.range-filter,
-.filter-chip-field,
-.filter-select,
-.keyword-field,
-.radius-card label {
-  position: relative;
-  display: grid;
-  gap: 6px;
-}
-
-.filter-autocomplete > span,
-.filter-multiselect > span,
-.range-filter__header > span,
-.filter-chip-field > span,
-.filter-select span,
-.keyword-field span,
-.radius-card label span {
-  color: #807389;
-  font-size: 0.75rem;
+  box-shadow: 0 12px 28px rgba(109, 40, 217, 0.28);
+  font-size: 1rem;
   font-weight: 900;
+  cursor: pointer;
 }
 
-.filter-autocomplete svg {
-  position: absolute;
-  left: 15px;
-  bottom: 18px;
-  color: #6d28d9;
-}
-
-.filter-autocomplete input,
-.filter-multiselect > button,
-.filter-select select,
-.keyword-field input,
-.radius-card input {
-  width: 100%;
-  min-height: 58px;
-  padding: 0 15px;
-  border: 1px solid #e6dff0;
-  border-radius: 18px;
-  color: #18151c;
-  background: #fff;
-  font-weight: 850;
-  outline: 0;
-  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
-}
-
-.filter-autocomplete input {
-  padding-left: 44px;
-}
-
-.filter-autocomplete input:focus,
-.filter-select select:focus,
-.keyword-field input:focus,
-.radius-card input:focus {
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 4px rgba(109, 40, 217, 0.1);
-}
-
-.filter-autocomplete__menu,
-.filter-multiselect__menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 30;
-  width: 100%;
-  max-height: 220px;
-  overflow: auto;
-  padding: 8px;
-  border: 1px solid #e6dff0;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 20px 45px rgba(40, 18, 66, 0.14);
-}
-
-.filter-autocomplete__menu button {
+.property-filter__quick-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 7px;
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  color: #5f536d;
-  background: transparent;
-  text-align: left;
+  gap: 10px;
 }
 
-.filter-autocomplete__menu button:hover {
-  background: #f5efff;
-  color: #6d28d9;
+.filter-pill-control {
+  position: relative;
 }
 
-.filter-multiselect > button {
-  display: flex;
+.filter-pill-control > button,
+.property-filter__more {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 8px;
-  overflow: hidden;
-  text-align: left;
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1.5px solid #9ca3af;
+  border-radius: 999px;
+  color: #5f6368;
+  background: #fff;
+  font-weight: 750;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
-.filter-multiselect__menu {
+.property-filter__more {
+  color: #6d28d9;
+  border-color: #d8c5ef;
+}
+
+.filter-pill-control > button:hover,
+.property-filter__more:hover {
+  color: #6d28d9;
+  border-color: #6d28d9;
+}
+
+.filter-multiselect__menu,
+.filter-popover-field .range-filter,
+.filter-popover-field .filter-chip-field {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 60;
   display: none;
-  grid-template-columns: 1fr;
-  gap: 4px;
+  min-width: 290px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid #e8e0f1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 22px 55px rgba(37, 18, 58, 0.18);
 }
 
-.filter-multiselect:hover .filter-multiselect__menu,
-.filter-multiselect:focus-within .filter-multiselect__menu {
+.filter-pill-control.is-open .filter-multiselect__menu,
+.filter-pill-control.is-open .range-filter,
+.filter-pill-control.is-open .filter-chip-field {
   display: grid;
 }
 
@@ -197,19 +201,23 @@
 }
 
 .range-filter {
-  padding: 12px 14px;
-  border: 1px solid #e6dff0;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
+  gap: 8px;
 }
 
 .range-filter__header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+}
+
+.range-filter__header > span,
+.filter-chip-field > span,
+.filter-select span,
+.keyword-field span,
+.radius-card label span {
+  color: #83778f;
+  font-size: 0.76rem;
+  font-weight: 900;
 }
 
 .range-filter__header strong {
@@ -220,18 +228,19 @@
 
 .range-filter__sliders {
   position: relative;
-  height: 18px;
+  height: 20px;
 }
 
 .range-filter__sliders input {
   position: absolute;
-  inset-inline: 0;
   width: 100%;
   accent-color: #6d28d9;
   pointer-events: none;
 }
 
-.range-filter__sliders input::-webkit-slider-thumb { pointer-events: auto; }
+.range-filter__sliders input::-webkit-slider-thumb {
+  pointer-events: auto;
+}
 
 .range-filter__inputs {
   display: grid;
@@ -240,8 +249,8 @@
 }
 
 .range-filter__inputs input {
-  min-width: 0;
   height: 34px;
+  min-width: 0;
   padding: 0 10px;
   border: 1px solid #eee8f5;
   border-radius: 11px;
@@ -251,30 +260,22 @@
   font-weight: 850;
 }
 
-.filter-chip-field {
-  padding: 10px 12px;
-  border: 1px solid #e6dff0;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(43, 20, 67, 0.04);
-}
-
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
 }
 
 .filter-chips button {
   min-height: 34px;
-  padding: 0 10px;
+  padding: 0 11px;
   border: 1px solid #e6dff0;
   border-radius: 999px;
   color: #675c73;
   background: #fff;
   font-size: 0.84rem;
   font-weight: 900;
-  transition: 180ms ease;
+  cursor: pointer;
 }
 
 .filter-chips button.is-active {
@@ -283,29 +284,35 @@
   background: #6d28d9;
 }
 
-.property-filter__search,
-.property-filter__more {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 58px;
-  padding: 0 22px;
-  border-radius: 18px;
-  font-weight: 950;
-  white-space: nowrap;
-}
-
-.property-filter__search {
-  color: #fff;
-  background: linear-gradient(135deg, #6d28d9, #9333ea 60%, #c084fc);
-  box-shadow: 0 18px 38px rgba(109, 40, 217, 0.3);
-}
-
-.property-filter__more {
-  color: #6d28d9;
-  border: 1px solid #ddcff4;
+.filter-autocomplete__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 80;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #e6dff0;
+  border-radius: 16px;
   background: #fff;
+  box-shadow: 0 20px 45px rgba(40, 18, 66, 0.14);
+}
+
+.filter-autocomplete__menu button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  color: #5f536d;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.filter-autocomplete__menu button:hover {
+  color: #6d28d9;
+  background: #f5efff;
 }
 
 .advanced-filter {
@@ -313,8 +320,8 @@
   padding: 22px;
   border: 1px solid #e8e0f1;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 55px rgba(37, 18, 58, 0.12);
 }
 
 .advanced-filter__header {
@@ -352,21 +359,51 @@
   cursor: pointer;
 }
 
-.advanced-filter__grid {
+.advanced-filter__grid,
+.advanced-filter__bottom {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
+.advanced-filter__bottom {
+  grid-template-columns: 1.1fr 0.9fr 0.9fr 1fr;
+  margin-top: 16px;
+}
+
+.filter-select,
+.keyword-field,
+.radius-card label {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.filter-select select,
+.keyword-field input,
+.radius-card input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1px solid #e6dff0;
+  border-radius: 15px;
+  color: #18151c;
+  background: #fff;
+  font-weight: 800;
+  outline: 0;
+}
+
 .filter-select svg {
   position: absolute;
   right: 13px;
-  bottom: 20px;
+  bottom: 17px;
   color: #91869d;
   pointer-events: none;
 }
 
-.filter-select select { appearance: none; }
+.filter-select select {
+  appearance: none;
+}
 
 .filter-checkbox-card,
 .amenities-card,
@@ -384,7 +421,9 @@
   color: #211a2a;
 }
 
-.amenities-card { margin-top: 16px; }
+.amenities-card {
+  margin-top: 16px;
+}
 
 .amenities-card > div {
   display: grid;
@@ -392,14 +431,10 @@
   gap: 4px;
 }
 
-.advanced-filter__bottom {
+.toggles-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr 0.9fr 1fr;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 9px;
 }
-
-.toggles-grid { display: grid; gap: 9px; }
 
 .filter-toggle {
   display: flex;
@@ -415,7 +450,10 @@
   font-weight: 800;
 }
 
-.filter-toggle input { position: absolute; opacity: 0; }
+.filter-toggle input {
+  position: absolute;
+  opacity: 0;
+}
 
 .filter-toggle i {
   position: relative;
@@ -424,7 +462,6 @@
   flex-shrink: 0;
   border-radius: 999px;
   background: #e4dce9;
-  transition: background 180ms ease;
 }
 
 .filter-toggle i::after {
@@ -440,8 +477,13 @@
   transition: transform 180ms ease;
 }
 
-.filter-toggle input:checked + i { background: #6d28d9; }
-.filter-toggle input:checked + i::after { transform: translateX(18px); }
+.filter-toggle input:checked + i {
+  background: #6d28d9;
+}
+
+.filter-toggle input:checked + i::after {
+  transform: translateX(18px);
+}
 
 .radius-card div {
   display: flex;
@@ -450,15 +492,20 @@
   margin-top: 10px;
 }
 
-.radius-card button {
+.radius-card button,
+.map-search-card button {
   padding: 8px 10px;
   border-radius: 999px;
   color: #6d28d9;
   background: #f4edff;
   font-weight: 850;
+  cursor: pointer;
 }
 
-.map-search-card { display: grid; gap: 10px; }
+.map-search-card {
+  display: grid;
+  gap: 10px;
+}
 
 .map-search-card__map {
   display: grid;
@@ -466,10 +513,7 @@
   min-height: 130px;
   border-radius: 14px;
   color: #6d28d9;
-  background:
-    linear-gradient(rgba(109, 40, 217, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px),
-    #f7f3ff;
+  background: linear-gradient(rgba(109, 40, 217, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(109, 40, 217, 0.1) 1px, transparent 1px), #f7f3ff;
   background-size: 26px 26px;
   text-align: center;
 }
@@ -480,62 +524,34 @@
   font-weight: 850;
 }
 
-.map-search-card button {
-  min-height: 43px;
-  border-radius: 13px;
-  color: #fff;
-  background: #6d28d9;
-  font-weight: 900;
-}
-
-@media (max-width: 1180px) {
-  .property-filter__default {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "type location"
-      "property price"
-      "bedrooms bedrooms"
-      "search more";
-  }
-}
-
-@media (max-width: 980px) {
-  .advanced-filter__grid,
-  .advanced-filter__bottom {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .amenities-card > div { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .property-filter {
+    width: min(100%, 610px);
     padding: 14px;
-    border-radius: 22px;
   }
 
-  .property-filter__default,
+  .property-filter__tabs {
+    gap: 18px;
+    overflow-x: auto;
+  }
+
+  .property-filter__search-line {
+    grid-template-columns: 1fr;
+  }
+
+  .property-filter__quick-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-pill-control > button,
+  .property-filter__more {
+    width: 100%;
+  }
+
   .advanced-filter__grid,
   .advanced-filter__bottom,
   .amenities-card > div {
     grid-template-columns: 1fr;
-  }
-
-  .property-filter__default {
-    grid-template-areas:
-      "type"
-      "location"
-      "property"
-      "price"
-      "bedrooms"
-      "search"
-      "more";
-  }
-
-  .filter-segment { min-height: 52px; }
-
-  .advanced-filter {
-    padding: 16px;
-    border-radius: 20px;
   }
 }

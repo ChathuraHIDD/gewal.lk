@@ -148,6 +148,7 @@ function PropertySearchFilter() {
   const [bathrooms, setBathrooms] = useState("Any");
   const [moreOpen, setMoreOpen] = useState(false);
   const [locationFocused, setLocationFocused] = useState(false);
+  const [activePopover, setActivePopover] = useState(null);
 
   const filteredLocations = useMemo(
     () => locations.filter((item) => item.toLowerCase().includes(location.toLowerCase().trim())),
@@ -164,9 +165,9 @@ function PropertySearchFilter() {
 
   return (
     <form className="property-filter" onSubmit={(event) => event.preventDefault()}>
-      <div className="property-filter__default">
-        <div className="filter-segment" aria-label="Listing type">
-          {["Buy", "Rent", "Lease"].map((type) => (
+      <div className="property-filter__default property-filter__default--compact">
+        <div className="property-filter__tabs" aria-label="Listing type">
+          {["Buy", "Rent", "Sell", "Home Value"].map((type) => (
             <button
               type="button"
               key={type}
@@ -178,67 +179,74 @@ function PropertySearchFilter() {
           ))}
         </div>
 
-        <label className="filter-autocomplete">
-          <span>Location</span>
-          <MapPin size={18} />
-          <input
-            value={location}
-            onFocus={() => setLocationFocused(true)}
-            onBlur={() => window.setTimeout(() => setLocationFocused(false), 120)}
-            onChange={(event) => setLocation(event.target.value)}
-            placeholder="Country, province, district, city, area or postal code"
-          />
-          {locationFocused && location && filteredLocations.length > 0 && (
-            <div className="filter-autocomplete__menu">
-              {filteredLocations.slice(0, 4).map((item) => (
-                <button type="button" key={item} onMouseDown={() => setLocation(item)}>
-                  <MapPin size={14} /> {item}
-                </button>
+        <div className="property-filter__search-line">
+          <label className="filter-autocomplete">
+            <Search size={20} />
+            <input
+              value={location}
+              onFocus={() => setLocationFocused(true)}
+              onBlur={() => window.setTimeout(() => setLocationFocused(false), 120)}
+              onChange={(event) => setLocation(event.target.value)}
+              placeholder="Search city, district, area, landmark or postal code"
+            />
+            {locationFocused && location && filteredLocations.length > 0 && (
+              <div className="filter-autocomplete__menu">
+                {filteredLocations.slice(0, 4).map((item) => (
+                  <button type="button" key={item} onMouseDown={() => setLocation(item)}>
+                    <MapPin size={14} /> {item}
+                  </button>
+                ))}
+              </div>
+            )}
+          </label>
+
+          <button className="property-filter__search" type="submit">
+            <Search size={19} /> Search
+          </button>
+        </div>
+
+        <div className="property-filter__quick-row">
+          <div className={activePopover === "type" ? "filter-multiselect filter-pill-control is-open" : "filter-multiselect filter-pill-control"}>
+            <button type="button" onClick={() => setActivePopover((value) => value === "type" ? null : "type")}>
+              Property Type
+              <ChevronDown size={16} />
+            </button>
+            <div className="filter-multiselect__menu">
+              {propertyTypes.map((type) => (
+                <label key={type}>
+                  <input
+                    type="checkbox"
+                    checked={selectedTypes.includes(type)}
+                    onChange={() => toggleType(type)}
+                  />
+                  {type}
+                </label>
               ))}
             </div>
-          )}
-        </label>
-
-        <div className="filter-multiselect">
-          <span>Property Type</span>
-          <button type="button">
-            {selectedTypes.length ? selectedTypes.join(", ") : "Select types"}
-            <ChevronDown size={16} />
-          </button>
-          <div className="filter-multiselect__menu">
-            {propertyTypes.map((type) => (
-              <label key={type}>
-                <input
-                  type="checkbox"
-                  checked={selectedTypes.includes(type)}
-                  onChange={() => toggleType(type)}
-                />
-                {type}
-              </label>
-            ))}
           </div>
+
+          <div className={activePopover === "price" ? "filter-popover-field filter-pill-control is-open" : "filter-popover-field filter-pill-control"}>
+            <button type="button" onClick={() => setActivePopover((value) => value === "price" ? null : "price")}>Price <ChevronDown size={16} /></button>
+            <RangeFilter label="Price Range" min={0} max={250000000} step={5000000} />
+          </div>
+
+          <div className={activePopover === "bedroom" ? "filter-popover-field filter-pill-control is-open" : "filter-popover-field filter-pill-control"}>
+            <button type="button" onClick={() => setActivePopover((value) => value === "bedroom" ? null : "bedroom")}>Bedroom <ChevronDown size={16} /></button>
+            <div className="filter-chip-field">
+              <ChoiceChips options={bedroomOptions} value={bedrooms} onChange={setBedrooms} />
+            </div>
+          </div>
+
+          <button
+            className="property-filter__more"
+            type="button"
+            onClick={() => setMoreOpen((open) => !open)}
+            aria-expanded={moreOpen}
+          >
+            {moreOpen ? <X size={18} /> : <SlidersHorizontal size={18} />}
+            More Filters
+          </button>
         </div>
-
-        <RangeFilter label="Price Range" min={0} max={250000000} step={5000000} />
-
-        <div className="filter-chip-field">
-          <span>Bedrooms</span>
-          <ChoiceChips options={bedroomOptions} value={bedrooms} onChange={setBedrooms} />
-        </div>
-
-        <button className="property-filter__search" type="submit">
-          <Search size={19} /> Search
-        </button>
-
-        <button
-          className="property-filter__more"
-          type="button"
-          onClick={() => setMoreOpen((open) => !open)}
-          aria-expanded={moreOpen}
-        >
-          {moreOpen ? <X size={18} /> : <SlidersHorizontal size={18} />}
-          More Filters
-        </button>
       </div>
 
       {moreOpen && (

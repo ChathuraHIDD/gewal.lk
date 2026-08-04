@@ -1,0 +1,64 @@
+.static-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fbfaff, #f3effb);
+}
+
+.static-page__hero {
+  padding: 90px 0 40px;
+  text-align: center;
+}
+
+.static-page__hero span {
+  color: #6d28d9;
+  font-size: 0.8rem;
+  font-weight: 950;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.static-page__hero h1 {
+  margin: 10px auto;
+  max-width: 780px;
+  color: #17121f;
+  font-size: clamp(2.6rem, 6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.static-page__hero p {
+  max-width: 680px;
+  margin: auto;
+  color: #6f667a;
+  font-size: 1.08rem;
+}
+
+.static-page__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-bottom: 90px;
+}
+
+.static-page__grid article {
+  padding: 28px;
+  border: 1px solid #e8e0f1;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 45px rgba(48, 24, 73, 0.08);
+}
+
+.static-page__grid h3 {
+  margin: 0 0 8px;
+  color: #17121f;
+}
+
+.static-page__grid p {
+  margin: 0;
+  color: #6f667a;
+}
+
+@media (max-width: 760px) {
+  .static-page__grid {
+    grid-template-columns: 1fr;
+  }
+}

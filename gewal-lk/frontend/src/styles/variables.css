@@ -1,0 +1,63 @@
+:root {
+  --primary-50: #fbf6ff;
+  --primary-100: #f3e7ff;
+  --primary-200: #e7ccff;
+  --primary-300: #d49cff;
+  --primary-400: #bd65ff;
+  --primary-500: #a23cff;
+  --primary-600: #9333ea;
+  --primary-700: #7e22ce;
+  --primary-800: #641ba3;
+  --primary-900: #4b147a;
+
+  --white: #ffffff;
+  --black: #171713;
+
+  --background: #f5f2ea;
+  --surface: #faf8f1;
+  --surface-soft: #f0ece2;
+  --surface-warm: #fffdf7;
+
+  --text-primary: #171713;
+  --text-secondary: #625d54;
+  --text-muted: #8b8376;
+
+  --border: #ded9ce;
+  --border-dark: #cbc3b5;
+
+  --success: #17875b;
+  --warning: #c98210;
+  --danger: #cf4141;
+
+  --gradient-primary: linear-gradient(135deg, #a23cff 0%, #9333ea 55%, #c084fc 100%);
+  --gradient-auth: linear-gradient(145deg, #171713 0%, #4b147a 54%, #a23cff 100%);
+
+  --shadow-sm: 0 10px 28px rgba(27, 23, 18, 0.06);
+  --shadow-md: 0 20px 50px rgba(27, 23, 18, 0.1);
+  --shadow-lg: 0 35px 90px rgba(27, 23, 18, 0.14);
+  --shadow-primary: 0 16px 35px rgba(162, 60, 255, 0.25);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-pill: 999px;
+
+  --container-width: 1080px;
+  --header-height: 66px;
+
+  --transition-fast: 160ms ease;
+  --transition-normal: 280ms ease;
+  --transition-slow: 500ms ease;
+
+  --font-main: Inter, Manrope, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-primary: var(--font-main);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-primary-200: var(--primary-200);
+  --color-primary-900: var(--primary-900);
+  --color-border: var(--border);
+}

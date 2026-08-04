@@ -1,0 +1,371 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-primary-200);
+  color: var(--color-primary-900);
+}
+
+.app {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  width: min(
+    calc(100% - 40px),
+    var(--container-width)
+  );
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: 88px;
+}
+
+.section--soft {
+  background: var(--color-surface-soft);
+}
+
+.heading-xl {
+  max-width: 780px;
+  font-size: clamp(2.5rem, 6vw, 5.4rem);
+  font-weight: 750;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.heading-lg {
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 720;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.heading-md {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+.text-gradient {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.text-muted {
+  color: var(--color-text-secondary);
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid
+    rgba(155, 77, 227, 0.28);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: min(
+      calc(100% - 28px),
+      var(--container-width)
+    );
+  }
+
+  .section {
+    padding-block: 64px;
+  }
+}
+/* Project-wide minimal marketplace skin */
+html {
+  background: #f5f2ea;
+}
+
+body {
+  background: #f5f2ea;
+  color: #171713;
+}
+
+.app,
+main,
+.page,
+.landing-page,
+.properties-page,
+.property-list-page,
+.dashboard-page,
+.admin-page,
+.blog-page,
+.contact-page,
+.about-page,
+.projects-page,
+.commercial-page,
+.messages-page,
+.appointments-page,
+.notifications-page,
+.agent-profile-page,
+.post-property-page {
+  background-color: #f5f2ea;
+}
+
+.section,
+.section--soft {
+  background: transparent;
+  border-color: #ded9ce;
+}
+
+.section-heading span,
+.page-kicker,
+.eyebrow,
+.kicker {
+  color: #8b8376 !important;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.section-heading h1,
+.section-heading h2,
+.page-title,
+.heading-xl,
+.heading-lg,
+.heading-md,
+h1,
+h2,
+h3 {
+  color: #171713;
+  letter-spacing: -0.055em;
+}
+
+p,
+.text-muted {
+  color: #625d54;
+}
+
+.card,
+.feature-card,
+.why-card,
+.property-card,
+.testimonials-card,
+.dashboard-card,
+.admin-card,
+.contact-card,
+.blog-card,
+.project-card,
+.agent-card,
+.message-card,
+.appointment-card,
+.notification-card {
+  border-color: #ded9ce !important;
+  border-radius: 0 !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+
+button,
+.btn,
+a[class*="btn"],
+[class*="button"] {
+  border-radius: 999px;
+}
+
+.btn--primary,
+.primary-button,
+button[type="submit"] {
+  color: #fff !important;
+  background: #a23cff !important;
+  box-shadow: none !important;
+}
+
+.btn--secondary,
+.btn--light {
+  color: #171713 !important;
+  border: 1px solid #ded9ce !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+
+input,
+select,
+textarea {
+  border-color: #ded9ce !important;
+  border-radius: 0 !important;
+  background-color: #fffdf7 !important;
+  color: #171713 !important;
+}
+
+.text-gradient {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: #a23cff;
+}
+
+/* Apply /properties minimal editorial style across all remaining pages */
+:is(.blog-page,.commercial-page,.user-dashboard-page,.messages-page,.appointments-page,.notifications-page,.projects-page,.post-property-page,.contact-page,.about-page,.agent-profile-page,.admin-page,.property-detail-page) {
+  background: #f5f2ea !important;
+  color: #171713 !important;
+}
+
+:is(.blog-hero,.commercial-hero,.dashboard-hero,.messages-hero,.appointments-hero,.notifications-hero,.projects-hero,.post-property-hero,.contact-hero,.about-hero,.agent-profile-hero,.admin-hero) {
+  padding: 72px 0 38px !important;
+  border-bottom: 0 !important;
+  background: #f5f2ea !important;
+  color: #171713 !important;
+  text-align: left !important;
+}
+
+:is(.blog-hero,.commercial-hero,.dashboard-hero,.messages-hero,.appointments-hero,.notifications-hero,.projects-hero,.post-property-hero,.contact-hero,.about-hero,.agent-profile-hero,.admin-hero) span,
+:is(.contact-faq,.section-heading) > span {
+  color: #8b8376 !important;
+  font-size: 0.78rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.28em !important;
+  text-transform: uppercase !important;
+}
+
+:is(.blog-hero,.commercial-hero,.dashboard-hero,.messages-hero,.appointments-hero,.notifications-hero,.projects-hero,.post-property-hero,.contact-hero,.about-hero,.agent-profile-hero,.admin-hero) h1 {
+  max-width: 900px !important;
+  margin: 20px 0 0 !important;
+  color: #171713 !important;
+  font-size: clamp(3rem, 6vw, 5.4rem) !important;
+  line-height: 1 !important;
+  letter-spacing: -0.075em !important;
+  font-weight: 850 !important;
+}
+
+:is(.blog-hero,.commercial-hero,.dashboard-hero,.messages-hero,.appointments-hero,.notifications-hero,.projects-hero,.post-property-hero,.contact-hero,.about-hero,.agent-profile-hero,.admin-hero) p {
+  max-width: 700px !important;
+  margin: 18px 0 0 !important;
+  color: #625d54 !important;
+}
+
+:is(.blog-shell,.commercial-layout,.dashboard-shell,.messages-shell,.appointments-shell,.notifications-shell,.post-property-shell,.contact-shell,.agent-profile-shell,.admin-shell) {
+  padding-bottom: 100px !important;
+}
+
+:is(.blog-search,.blog-category-card,.blog-detail,.blog-grid article,.commercial-sidebar,.commercial-results__heading,.dashboard-profile-card,.dashboard-sidebar nav,.dashboard-panel,.messages-list,.chat-panel,.chat-property-card,.project-card,.post-property-steps,.post-property-card,.post-preview-card,.contact-info-grid article,.contact-form,.contact-agent-card,.contact-map,.contact-faq,.contact-faq article,.sidebar-card,.gallery-card,.property-summary,.detail-section,.agent-card-box,.admin-card,.appointment-card,.notification-card) {
+  border: 1px solid #ded9ce !important;
+  border-radius: 0 !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+
+:is(.blog-search,.messages-search,.dashboard-search,.projects-search,.commercial-search-panel,.contact-form input,.contact-form textarea,.post-field input,.post-field select,.post-field textarea,.chat-composer>input,.dashboard-chat input,.settings-form input) {
+  border-color: #ded9ce !important;
+  background: #fffdf7 !important;
+  color: #171713 !important;
+}
+
+:is(.blog-category-card button,.commercial-sidebar button,.dashboard-sidebar button,.messages-list>button,.post-property-steps button,.amenity-selector button,.contact-faq article button) {
+  border-radius: 999px !important;
+  color: #625d54 !important;
+  background: transparent !important;
+}
+
+:is(.blog-category-card button.is-active,.blog-category-card button:hover,.commercial-sidebar button.is-active,.commercial-sidebar button:hover,.dashboard-sidebar button.is-active,.dashboard-sidebar button:hover,.messages-list>button.is-active,.messages-list>button:hover,.post-property-steps button.is-active,.amenity-selector button.is-active) {
+  color: #fff !important;
+  background: #a23cff !important;
+}
+
+:is(.blog-grid span,.blog-grid small,.blog-detail__meta span,.commercial-map,.contact-map,.post-map-preview,.dashboard-chart,.avatar,.contact-info-grid article,.contact-agent-card,.project-card__body>strong,.chat-property-card span,.billing-card) {
+  color: #a23cff !important;
+}
+
+:is(.blog-comments button,.commercial-search-panel button,.commercial-map button,.project-card__body button,.post-property-actions button:last-child,.contact-form button,.contact-agent-card a,.chat-composer>button,.chat-property-card a,.dashboard-chat label button,.billing-card button,.settings-form button,.sidebar-card__primary,.sidebar-card__contact,.report-modal__card button:last-child) {
+  color: #fff !important;
+  background: #a23cff !important;
+  box-shadow: none !important;
+}
+
+:is(.commercial-hero__cards article,.projects-search,.commercial-search-panel,.dashboard-chart,.blog-seo-box,.billing-card,.chat-composer>label,.dashboard-list span,.dashboard-list button,.sidebar-card__secondary,.post-property-actions button:first-child) {
+  border-radius: 0 !important;
+  background: #faf8f1 !important;
+  color: #625d54 !important;
+}
+
+:is(.project-card,.blog-grid article,.property-card,.dashboard-stats button) {
+  transition: transform 180ms ease !important;
+}
+
+:is(.project-card,.blog-grid article,.property-card,.dashboard-stats button):hover {
+  transform: translateY(-4px) !important;
+  box-shadow: none !important;
+}
+
+:is(.projects-grid,.blog-grid,.commercial-grid,.dashboard-property-grid) {
+  gap: 30px !important;
+}
+
+:is(.project-card__media span,.minimal-property-card__image span,.blog-grid span) {
+  border-radius: 999px !important;
+  background: rgba(250, 248, 241, 0.94) !important;
+  color: #625d54 !important;
+}
+
+:is(.project-card__body h2,.blog-grid h2,.blog-detail h2,.dashboard-panel h2,.contact-form h2,.contact-faq h2,.post-step h2,.commercial-results__heading strong,.dashboard-profile-card h3,.messages-list strong,.chat-header strong,.property-detail h1,.detail-section h3,.sidebar-card h3) {
+  color: #171713 !important;
+  letter-spacing: -0.05em !important;
+}
+
+:is(.project-card__body p,.blog-grid p,.blog-detail>p,.dashboard-panel p,.contact-form p,.contact-info-grid p,.post-step>p,.commercial-results__heading span,.messages-list small,.chat-header small,.chat-message span,.sidebar-card p) {
+  color: #625d54 !important;
+}
+
+/* Global back to top button for every page */
+.global-back-to-top {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(162, 60, 255, 0.28);
+  border-radius: 50%;
+  color: #fff;
+  background: #a23cff;
+  box-shadow: 0 18px 42px rgba(162, 60, 255, 0.24);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.92);
+  transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease, background 180ms ease;
+}
+
+.global-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.global-back-to-top:hover {
+  background: #8f2be6;
+  transform: translateY(-4px) scale(1.03);
+}
+
+@media (max-width: 900px) {
+  .global-back-to-top {
+    right: 18px;
+    bottom: 82px;
+  }
+}

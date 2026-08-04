@@ -14,6 +14,7 @@
 
 .market-property-card__media {
   position: relative;
+  display: block;
   height: 245px;
   overflow: hidden;
 }
@@ -71,6 +72,59 @@
   color: #6d28d9;
   background: rgba(255, 255, 255, 0.92);
   cursor: pointer;
+}
+
+.market-property-card__save.is-active {
+  color: #ef4444;
+}
+
+.market-property-card__arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #17121f;
+  background: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 160ms ease, transform 160ms ease;
+  cursor: pointer;
+}
+
+.market-property-card:hover .market-property-card__arrow {
+  opacity: 1;
+}
+
+.market-property-card__arrow--left {
+  left: 12px;
+}
+
+.market-property-card__arrow--right {
+  right: 12px;
+}
+
+.market-property-card__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 13px;
+  display: flex;
+  gap: 5px;
+  transform: translateX(-50%);
+}
+
+.market-property-card__dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.market-property-card__dots span.is-active {
+  width: 18px;
+  background: #fff;
 }
 
 .market-property-card__body {
@@ -154,6 +208,12 @@
   border: 1px solid #e4d8f4;
   background: #fff;
   cursor: pointer;
+}
+
+.market-property-card__actions button.is-active {
+  color: #fff;
+  border-color: #6d28d9;
+  background: #6d28d9;
 }
 
 .market-property-card--list {

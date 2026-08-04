@@ -94,3 +94,127 @@ body {
     padding-block: 64px;
   }
 }
+/* Project-wide minimal marketplace skin */
+html {
+  background: #f5f2ea;
+}
+
+body {
+  background: #f5f2ea;
+  color: #171713;
+}
+
+.app,
+main,
+.page,
+.landing-page,
+.properties-page,
+.property-list-page,
+.dashboard-page,
+.admin-page,
+.blog-page,
+.contact-page,
+.about-page,
+.projects-page,
+.commercial-page,
+.messages-page,
+.appointments-page,
+.notifications-page,
+.agent-profile-page,
+.post-property-page {
+  background-color: #f5f2ea;
+}
+
+.section,
+.section--soft {
+  background: transparent;
+  border-color: #ded9ce;
+}
+
+.section-heading span,
+.page-kicker,
+.eyebrow,
+.kicker {
+  color: #8b8376 !important;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.section-heading h1,
+.section-heading h2,
+.page-title,
+.heading-xl,
+.heading-lg,
+.heading-md,
+h1,
+h2,
+h3 {
+  color: #171713;
+  letter-spacing: -0.055em;
+}
+
+p,
+.text-muted {
+  color: #625d54;
+}
+
+.card,
+.feature-card,
+.why-card,
+.property-card,
+.testimonials-card,
+.dashboard-card,
+.admin-card,
+.contact-card,
+.blog-card,
+.project-card,
+.agent-card,
+.message-card,
+.appointment-card,
+.notification-card {
+  border-color: #ded9ce !important;
+  border-radius: 0 !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+
+button,
+.btn,
+a[class*="btn"],
+[class*="button"] {
+  border-radius: 999px;
+}
+
+.btn--primary,
+.primary-button,
+button[type="submit"] {
+  color: #fff !important;
+  background: #a23cff !important;
+  box-shadow: none !important;
+}
+
+.btn--secondary,
+.btn--light {
+  color: #171713 !important;
+  border: 1px solid #ded9ce !important;
+  background: #faf8f1 !important;
+  box-shadow: none !important;
+}
+
+input,
+select,
+textarea {
+  border-color: #ded9ce !important;
+  border-radius: 0 !important;
+  background-color: #fffdf7 !important;
+  color: #171713 !important;
+}
+
+.text-gradient {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: #a23cff;
+}

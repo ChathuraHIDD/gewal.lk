@@ -555,3 +555,123 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* More Filters as centered popup modal, not dropdown */
+.advanced-filter-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.advanced-filter-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(23, 23, 19, 0.52);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+}
+
+.advanced-filter-modal .advanced-filter {
+  position: relative;
+  z-index: 1;
+  width: min(980px, calc(100vw - 34px));
+  max-height: min(84vh, 820px);
+  margin: 0;
+  overflow: auto;
+  padding: 28px;
+  border: 1px solid #ded9ce;
+  border-radius: 0;
+  background: #faf8f1;
+  box-shadow: 0 38px 120px rgba(23, 23, 19, 0.28);
+}
+
+.advanced-filter-modal .advanced-filter__header {
+  position: sticky;
+  top: -28px;
+  z-index: 2;
+  margin: -28px -28px 24px;
+  padding: 24px 28px;
+  border-bottom: 1px solid #ded9ce;
+  background: rgba(250, 248, 241, 0.96);
+  backdrop-filter: blur(14px);
+}
+
+.advanced-filter-modal .advanced-filter__header span {
+  color: #a23cff;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.advanced-filter-modal .advanced-filter__header h3 {
+  color: #171713;
+  letter-spacing: -0.05em;
+}
+
+.advanced-filter-modal .advanced-filter__header > button {
+  border: 1px solid #ded9ce;
+  color: #625d54;
+  background: #f5f2ea;
+}
+
+.advanced-filter__footer {
+  position: sticky;
+  bottom: -28px;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 24px -28px -28px;
+  padding: 18px 28px;
+  border-top: 1px solid #ded9ce;
+  background: rgba(250, 248, 241, 0.96);
+  backdrop-filter: blur(14px);
+}
+
+.advanced-filter__footer button {
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.advanced-filter__footer button:first-child {
+  border: 1px solid #ded9ce;
+  color: #171713;
+  background: #faf8f1;
+}
+
+.advanced-filter__footer button:last-child {
+  color: #fff;
+  background: #a23cff;
+}
+
+@media (max-width: 760px) {
+  .advanced-filter-modal {
+    align-items: end;
+    padding: 0;
+  }
+
+  .advanced-filter-modal .advanced-filter {
+    width: 100%;
+    max-height: 88vh;
+    padding: 22px;
+  }
+
+  .advanced-filter-modal .advanced-filter__header {
+    top: -22px;
+    margin: -22px -22px 20px;
+    padding: 20px 22px;
+  }
+
+  .advanced-filter__footer {
+    bottom: -22px;
+    margin: 20px -22px -22px;
+    padding: 16px 22px;
+  }
+}

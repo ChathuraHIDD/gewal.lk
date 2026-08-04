@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   ChevronDown,
   Filter,
@@ -249,15 +250,22 @@ function PropertySearchFilter() {
         </div>
       </div>
 
-      {moreOpen && (
-        <section className="advanced-filter" aria-label="Advanced filters">
-          <div className="advanced-filter__header">
-            <div>
-              <span><Filter size={17} /> Advanced Filters</span>
-              <h3>Refine your property search</h3>
+      {moreOpen && createPortal((
+        <div className="advanced-filter-modal" role="dialog" aria-modal="true" aria-label="Advanced filters">
+          <button
+            className="advanced-filter-modal__backdrop"
+            type="button"
+            aria-label="Close advanced filters"
+            onClick={() => setMoreOpen(false)}
+          />
+          <section className="advanced-filter" aria-label="Advanced filters">
+            <div className="advanced-filter__header">
+              <div>
+                <span><Filter size={17} /> Advanced Filters</span>
+                <h3>Refine your property search</h3>
+              </div>
+              <button type="button" onClick={() => setMoreOpen(false)}><X size={19} /></button>
             </div>
-            <button type="button" onClick={() => setMoreOpen(false)}><X size={19} /></button>
-          </div>
 
           <div className="advanced-filter__grid">
             <div className="filter-chip-field">
@@ -318,35 +326,41 @@ function PropertySearchFilter() {
             </div>
           </div>
 
-          <div className="advanced-filter__bottom">
-            <div className="toggles-grid">
-              {["Verified Listing", "Featured Listing", "Negotiable Price", "Virtual Tour Available", "Video Available"].map((item) => (
-                <Toggle key={item} label={item} />
-              ))}
-            </div>
+            <div className="advanced-filter__bottom">
+              <div className="toggles-grid">
+                {["Verified Listing", "Featured Listing", "Negotiable Price", "Virtual Tour Available", "Video Available"].map((item) => (
+                  <Toggle key={item} label={item} />
+                ))}
+              </div>
 
-            <label className="keyword-field">
-              <span>Keyword Search</span>
-              <input placeholder="Search by title or description" />
-            </label>
-
-            <div className="radius-card">
-              <label>
-                <span>Radius Search</span>
-                <input placeholder="Enter location" />
+              <label className="keyword-field">
+                <span>Keyword Search</span>
+                <input placeholder="Search by title or description" />
               </label>
-              <div>
-                {["5km", "10km", "20km", "50km"].map((item) => <button type="button" key={item}>{item}</button>)}
+
+              <div className="radius-card">
+                <label>
+                  <span>Radius Search</span>
+                  <input placeholder="Enter location" />
+                </label>
+                <div>
+                  {["5km", "10km", "20km", "50km"].map((item) => <button type="button" key={item}>{item}</button>)}
+                </div>
+              </div>
+
+              <div className="map-search-card">
+                <div className="map-search-card__map"><Map size={28} /><span>OpenStreetMap preview</span></div>
+                <button type="button">Search this Area</button>
               </div>
             </div>
 
-            <div className="map-search-card">
-              <div className="map-search-card__map"><Map size={28} /><span>OpenStreetMap preview</span></div>
-              <button type="button">Search this Area</button>
+            <div className="advanced-filter__footer">
+              <button type="button" onClick={() => setMoreOpen(false)}>Cancel</button>
+              <button type="submit" onClick={() => setMoreOpen(false)}>Apply Filters</button>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        </div>
+      ), document.body)}
     </form>
   );
 }

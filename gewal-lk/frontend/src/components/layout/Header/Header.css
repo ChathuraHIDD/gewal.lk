@@ -981,3 +981,120 @@
 .market-header__notification-head a:hover {
   color: #a23cff !important;
 }
+
+/* Profile image avatar */
+.market-header__avatar {
+  overflow: hidden;
+  padding: 0 !important;
+}
+
+.market-header__avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.market-header__profile-head > span {
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #ded9ce;
+  border-radius: 50%;
+  background: #fffdf7;
+}
+
+.market-header__profile-head > span img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Use clean profile icon, not image */
+.market-header__avatar {
+  overflow: visible;
+  padding: 0 !important;
+}
+
+.market-header__avatar img,
+.market-header__profile-head > span img {
+  display: none;
+}
+
+.market-header__avatar svg,
+.market-header__profile-head > span svg {
+  color: currentColor;
+}
+
+.market-header__profile-head > span {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #ded9ce;
+  border-radius: 50%;
+  color: #625d54;
+  background: #fffdf7;
+}
+
+/* Match reference profile icon: light outlined circle */
+.market-header__avatar {
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  border: 1px solid #ded9ce !important;
+  border-radius: 50% !important;
+  color: #625d54 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.market-header__avatar:hover {
+  color: #a23cff !important;
+  border-color: #d4c4df !important;
+  background: transparent !important;
+}
+
+.market-header__avatar svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke-width: 1.7 !important;
+}
+
+/* Keep Post Property hover readable */
+.market-header__post,
+.market-header__post:hover,
+.market-header__post:focus-visible {
+  color: #fff !important;
+}
+
+.market-header__post:hover {
+  background: #8f2be6 !important;
+}
+
+.market-header__post svg,
+.market-header__post:hover svg {
+  color: #fff !important;
+  stroke: currentColor !important;
+}
+
+/* Keep mega menus inside viewport */
+.market-header__mega {
+  max-width: calc(100vw - 48px);
+  overflow: hidden;
+}
+
+.market-header__nav-item:nth-last-of-type(2) .market-header__mega,
+.market-header__nav-item:last-of-type .market-header__mega {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+}
+
+@media (max-width: 900px) {
+  .market-header__mega {
+    width: calc(100vw - 32px);
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+  }
+}

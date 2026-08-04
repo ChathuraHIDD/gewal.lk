@@ -73,6 +73,7 @@ function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   return (
     <header className="market-header">
       <div className="market-header__top">
@@ -119,15 +120,48 @@ function Header() {
           </nav>
 
           <div className="market-header__user-actions">
-            <Link to="/dashboard" className="market-header__badge" aria-label="Notifications"><Bell size={19} /><i>5</i></Link>
+            <div
+              className="market-header__notification-wrap"
+              onMouseEnter={() => {
+                setNotificationOpen(true);
+                setProfileOpen(false);
+              }}
+              onMouseLeave={() => setNotificationOpen(false)}
+            >
+              <button
+                type="button"
+                className="market-header__badge"
+                aria-label="Show unread notifications"
+                aria-expanded={notificationOpen}
+                onClick={() => {
+                  setNotificationOpen((open) => !open);
+                  setProfileOpen(false);
+                }}
+              >
+                <Bell size={19} /><i>3</i>
+              </button>
+              <AnimatePresence>
+                {notificationOpen && <NotificationMenu />}
+              </AnimatePresence>
+            </div>
             <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
-            <div className="market-header__profile-wrap">
+            <div
+              className="market-header__profile-wrap"
+              onMouseEnter={() => {
+                setProfileOpen(true);
+                setNotificationOpen(false);
+              }}
+              onMouseLeave={() => setProfileOpen(false)}
+            >
               <button
                 type="button"
                 className="market-header__avatar"
                 aria-label="Open profile menu"
                 aria-expanded={profileOpen}
-                onClick={() => setProfileOpen((open) => !open)}
+                onClick={() => {
+                  setProfileOpen((open) => !open);
+                  setNotificationOpen(false);
+                }}
               >
                 <UserRound size={19} />
               </button>
@@ -139,7 +173,7 @@ function Header() {
 
           <div className="market-header__mobile-buttons">
             <button aria-label="Search"><Search size={21} /></button>
-            <button aria-label="Notifications"><Bell size={21} /></button>
+            <Link to="/notifications" aria-label="Notifications"><Bell size={21} /></Link>
             <button aria-label="Menu" onClick={() => setMobileOpen((open) => !open)}>
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -190,6 +224,35 @@ function MegaMenu({ menu }) {
   );
 }
 
+function NotificationMenu() {
+  const unreadNotifications = [
+    ["Property approved", "Your villa listing is now published."],
+    ["Appointment accepted", "Danial Doe accepted your viewing request."],
+    ["New message", "You have a new message from Nimali Perera."],
+  ];
+
+  return (
+    <motion.div
+      className="market-header__notification-menu"
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.98 }}
+      transition={{ duration: 0.16 }}
+    >
+      <div className="market-header__notification-head">
+        <strong>Unread Notifications</strong>
+        <Link to="/notifications" onClick={() => window.scrollTo(0, 0)}>View all</Link>
+      </div>
+      {unreadNotifications.map(([title, message]) => (
+        <Link to="/notifications" key={title} onClick={() => window.scrollTo(0, 0)}>
+          <Bell size={17} />
+          <span><strong>{title}</strong><small>{message}</small></span>
+        </Link>
+      ))}
+    </motion.div>
+  );
+}
+
 function ProfileMenu() {
   return (
     <motion.div
@@ -208,8 +271,8 @@ function ProfileMenu() {
       </div>
       <Link to="/properties"><Heart size={17} /> Saved Properties</Link>
       <Link to="/properties"><SlidersHorizontal size={17} /> Compare Properties</Link>
-      <Link to="/dashboard"><MessageCircle size={17} /> Messages <em>3</em></Link>
-      <Link to="/dashboard"><CalendarDays size={17} /> Appointments</Link>
+      <Link to="/messages"><MessageCircle size={17} /> Messages <em>3</em></Link>
+      <Link to="/appointments"><CalendarDays size={17} /> Appointments</Link>
       <Link to="/dashboard"><UserRound size={17} /> Dashboard</Link>
       <Link to="/contact"><HelpCircle size={17} /> Help Center</Link>
     </motion.div>

@@ -1,7 +1,6 @@
 import { Router } from "express";
 
-import { USER_ROLES } from "../../constants/auth.constants.js";
-import { authenticate, authorize } from "../../middlewares/auth.middleware.js";
+import { authenticate } from "../../middlewares/auth.middleware.js";
 import { uploadPropertyImages } from "../../middlewares/upload.middleware.js";
 
 import {
@@ -21,7 +20,6 @@ const router = Router();
 router.post(
   "/",
   authenticate,
-  authorize(USER_ROLES.SELLER, USER_ROLES.AGENT),
   uploadPropertyImages.array("images", 10),
   validateCreateProperty,
   createProperty

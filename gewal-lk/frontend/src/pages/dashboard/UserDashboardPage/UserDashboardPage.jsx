@@ -26,9 +26,6 @@ import { useAuth } from "../../../hooks/useAuth.js";
 import { getMyProperties } from "../../../services/propertyService.js";
 import "./UserDashboardPage.css";
 
-const canPostProperty = (user) =>
-  Boolean(user?.roles?.some((role) => role === "seller" || role === "agent"));
-
 const roleLabel = (user) => {
   if (!user) return "Buyer account";
   if (user.roles?.includes("admin") || user.roles?.includes("super_admin")) return "Admin account";
@@ -76,13 +73,6 @@ function UserDashboardPage() {
   const [readNotifications, setReadNotifications] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
 
-  const canPost = canPostProperty(user);
-
-  const tabs = useMemo(
-    () => allTabs.filter(([key]) => key !== "properties" || canPost),
-    [canPost]
-  );
-
   const filteredSaved = useMemo(
     () => saved.filter((property) => property.title.toLowerCase().includes(query.toLowerCase()) || property.location.toLowerCase().includes(query.toLowerCase())),
     [query, saved]
@@ -96,7 +86,7 @@ function UserDashboardPage() {
           <h1>Your property command center</h1>
           <p>Manage saved properties, appointments, messages, notifications, listings and billing from one premium dashboard.</p>
         </div>
-        {canPost && <a href="/post-property"><Plus size={18} /> Post Property</a>}
+        <a href="/post-property"><Plus size={18} /> Post Property</a>
       </section>
 
       <section className="container dashboard-shell">
@@ -107,7 +97,7 @@ function UserDashboardPage() {
             <p>{roleLabel(user)}</p>
           </div>
           <nav>
-            {tabs.map(([key, Icon, label]) => (
+            {allTabs.map(([key, Icon, label]) => (
               <button key={key} className={activeTab === key ? "is-active" : ""} onClick={() => setActiveTab(key)}>
                 <Icon size={18} /> {label}
               </button>

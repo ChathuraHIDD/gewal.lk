@@ -9,6 +9,7 @@ import {
   Link,
   useLocation,
   useNavigate,
+  useSearchParams,
 } from "react-router-dom";
 
 import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout.jsx";
@@ -18,6 +19,8 @@ function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
+  const [searchParams] = useSearchParams();
+  const isAgentContext = searchParams.get("role") === "agent";
 
   const [email, setEmail] =
     useState("");
@@ -63,8 +66,12 @@ function LoginPage() {
 
   return (
     <AuthLayout
-      title="Welcome back"
-      description="Sign in to manage your listings, favourites and messages."
+      title={isAgentContext ? "Agent sign in" : "Welcome back"}
+      description={
+        isAgentContext
+          ? "Sign in to your agent account to manage listings and appointments."
+          : "Sign in to manage your listings, favourites and messages."
+      }
     >
       <form
         className="auth-form"
@@ -197,7 +204,7 @@ function LoginPage() {
 
       <p className="auth-form__footer">
         New to Gewal.lk?{" "}
-        <Link to="/register">
+        <Link to={isAgentContext ? "/register?role=agent" : "/register"}>
           Create an account
         </Link>
       </p>

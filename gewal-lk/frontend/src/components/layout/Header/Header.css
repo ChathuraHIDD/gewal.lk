@@ -173,6 +173,52 @@
   color: #6d28d9;
 }
 
+.market-header__agents-menu {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.market-header__agents-menu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  color: #44384f;
+}
+
+.market-header__agents-menu-item:hover {
+  color: #a23cff;
+  background: transparent;
+}
+
+.market-header__agents-menu-item svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #a23cff;
+}
+
+.market-header__agents-menu-item span {
+  display: block;
+}
+
+.market-header__agents-menu-item strong {
+  display: block;
+  color: #171713;
+  font-size: 0.9rem;
+}
+
+.market-header__agents-menu-item small {
+  display: block;
+  margin-top: 2px;
+  color: #625d54;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .market-header__user-actions {
   gap: 8px;
 }

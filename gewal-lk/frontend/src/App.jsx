@@ -124,7 +124,7 @@ function App() {
         <Route
           path="/post-property"
           element={
-            <ProtectedRoute roles={["seller", "agent"]} redirectTo="/dashboard">
+            <ProtectedRoute>
               <PostPropertyPage />
             </ProtectedRoute>
           }

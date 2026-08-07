@@ -9,7 +9,7 @@ import {
   Phone,
   UserRound,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
@@ -46,12 +46,24 @@ const initialFormData = {
   acceptTerms: false,
 };
 
+const allowedRoles = roleOptions.map((option) => option.value);
+
 function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+  const [searchParams] = useSearchParams();
 
   const [formData, setFormData] =
-    useState(initialFormData);
+    useState(() => {
+      const roleParam = searchParams.get("role");
+
+      return {
+        ...initialFormData,
+        role: allowedRoles.includes(roleParam)
+          ? roleParam
+          : initialFormData.role,
+      };
+    });
 
   const [currentStep, setCurrentStep] =
     useState(1);

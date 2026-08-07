@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
+  BadgeCheck,
   Bell,
   Building2,
   CalendarDays,
@@ -16,6 +17,7 @@ import {
   Plus,
   Search,
   SlidersHorizontal,
+  Users,
   UserRound,
   X,
 } from "lucide-react";
@@ -26,8 +28,8 @@ import fullLogo from "../../../assets/logos/gewal-full-logo.png";
 import { useAuth } from "../../../hooks/useAuth.js";
 import "./Header.css";
 
-const canPostProperty = (user) =>
-  Boolean(user?.roles?.some((role) => role === "seller" || role === "agent"));
+const isAgentUser = (user) =>
+  Boolean(user?.roles?.some((role) => role === "agent"));
 
 const isAdminUser = (user) =>
   Boolean(user?.roles?.some((role) => role === "admin" || role === "super_admin"));
@@ -45,7 +47,7 @@ const navItems = [
   { label: "Rent", path: "/rent", menu: "rent" },
   { label: "Commercial", path: "/commercial", menu: "commercial" },
   { label: "New Projects", path: "/new-projects" },
-  { label: "Agents", path: "/agents" },
+  { label: "Agents", path: "/agents", menu: "agents" },
   { label: "Services", path: "/services", menu: "services" },
   { label: "Blog", path: "/blog" },
 ];
@@ -136,7 +138,12 @@ function Header() {
                   {item.menu && <ChevronDown size={14} />}
                 </NavLink>
                 <AnimatePresence>
-                  {activeMenu === item.menu && <MegaMenu menu={megaMenus[item.menu]} />}
+                  {activeMenu === item.menu && item.menu === "agents" && (
+                    <AgentsMenu isAgent={isAuthenticated && isAgentUser(user)} />
+                  )}
+                  {activeMenu === item.menu && item.menu !== "agents" && (
+                    <MegaMenu menu={megaMenus[item.menu]} />
+                  )}
                 </AnimatePresence>
               </div>
             ))}
@@ -167,9 +174,7 @@ function Header() {
                 {notificationOpen && <NotificationMenu />}
               </AnimatePresence>
             </div>
-            {canPostProperty(user) && (
-              <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
-            )}
+            <Link to="/post-property" className="market-header__post"><Plus size={18} /> Post Property</Link>
             <div
               className="market-header__profile-wrap"
               onMouseEnter={() => {
@@ -255,6 +260,35 @@ function MegaMenu({ menu }) {
   );
 }
 
+function AgentsMenu({ isAgent }) {
+  return (
+    <motion.div
+      className="market-header__mega market-header__agents-menu"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 12 }}
+      transition={{ duration: 0.18 }}
+    >
+      <Link to="/agents" className="market-header__agents-menu-item">
+        <Users size={18} />
+        <span>
+          <strong>Find Agents</strong>
+          <small>Browse verified agents and book a viewing</small>
+        </span>
+      </Link>
+      {!isAgent && (
+        <Link to="/login?role=agent" className="market-header__agents-menu-item">
+          <BadgeCheck size={18} />
+          <span>
+            <strong>Login as Agent</strong>
+            <small>Sign in or register as a real estate agent</small>
+          </span>
+        </Link>
+      )}
+    </motion.div>
+  );
+}
+
 function NotificationMenu() {
   const unreadNotifications = [
     ["Property approved", "Your villa listing is now published."],
@@ -305,7 +339,7 @@ function ProfileMenu({ user, isAuthenticated, logout }) {
       <Link to="/messages"><MessageCircle size={17} /> Messages <em>3</em></Link>
       <Link to="/appointments"><CalendarDays size={17} /> Appointments</Link>
       <Link to="/dashboard"><UserRound size={17} /> Dashboard</Link>
-      {canPostProperty(user) && <Link to="/post-property"><Plus size={17} /> Post Property</Link>}
+      <Link to="/post-property"><Plus size={17} /> Post Property</Link>
       {isAdminUser(user) && <Link to="/admin"><UserCircle size={17} /> Admin Panel</Link>}
       <Link to="/contact"><HelpCircle size={17} /> Help Center</Link>
       {isAuthenticated ? (

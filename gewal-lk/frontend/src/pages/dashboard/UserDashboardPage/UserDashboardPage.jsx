@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   AlertCircle,
   BarChart3,
@@ -15,7 +16,6 @@ import {
   Plus,
   Search,
   Settings,
-  SlidersHorizontal,
   Trash2,
   UserRound,
 } from "lucide-react";
@@ -23,7 +23,10 @@ import {
 import PropertyCard from "../../../components/property/PropertyCard/PropertyCard.jsx";
 import { demoProperties } from "../../../data/demoProperties.js";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { useFavorites } from "../../../hooks/useFavorites.js";
+import { getFavorites } from "../../../services/favoriteService.js";
 import { getMyProperties } from "../../../services/propertyService.js";
+import { toPropertyCardShape } from "../../../utils/propertyFormat.js";
 import "./UserDashboardPage.css";
 
 const roleLabel = (user) => {
@@ -38,7 +41,6 @@ const allTabs = [
   ["overview", LayoutDashboard, "Overview"],
   ["saved", Heart, "Saved"],
   ["recent", Eye, "Recently Viewed"],
-  ["compare", SlidersHorizontal, "Compare"],
   ["appointments", CalendarDays, "Appointments"],
   ["messages", MessageCircle, "Messages"],
   ["notifications", Bell, "Notifications"],
@@ -67,14 +69,43 @@ const conversations = [
 
 function UserDashboardPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("overview");
-  const [saved, setSaved] = useState(demoProperties.slice(0, 3));
+  const [searchParams] = useSearchParams();
+  const initialTab = allTabs.some(([key]) => key === searchParams.get("tab")) ? searchParams.get("tab") : "overview";
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [query, setQuery] = useState("");
   const [readNotifications, setReadNotifications] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
 
+  const { savedIds, toggle: toggleFavorite } = useFavorites();
+  const [saved, setSaved] = useState([]);
+  const [savedLoading, setSavedLoading] = useState(true);
+  const [savedError, setSavedError] = useState("");
+
+  useEffect(() => {
+    if (activeTab !== "saved") return undefined;
+
+    let cancelled = false;
+    setSavedLoading(true);
+    setSavedError("");
+
+    getFavorites()
+      .then((result) => {
+        if (!cancelled) setSaved(result.data.properties);
+      })
+      .catch((requestError) => {
+        if (!cancelled) setSavedError(requestError.message || "Failed to load saved properties.");
+      })
+      .finally(() => {
+        if (!cancelled) setSavedLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab, savedIds]);
+
   const filteredSaved = useMemo(
-    () => saved.filter((property) => property.title.toLowerCase().includes(query.toLowerCase()) || property.location.toLowerCase().includes(query.toLowerCase())),
+    () => saved.filter((property) => property.title.toLowerCase().includes(query.toLowerCase())),
     [query, saved]
   );
 
@@ -106,33 +137,34 @@ function UserDashboardPage() {
         </aside>
 
         <div className="dashboard-content">
-          {activeTab === "overview" && <Overview setActiveTab={setActiveTab} />}
+          {activeTab === "overview" && <Overview setActiveTab={setActiveTab} savedCount={savedIds.size} />}
 
           {activeTab === "saved" && (
             <Panel title="Saved Properties" description="Your favourite listings in one place.">
               <div className="dashboard-search"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search saved properties" /></div>
-              <div className="dashboard-property-grid">
-                {filteredSaved.map((property) => (
-                  <div key={property.id} className="dashboard-saved-item">
-                    <PropertyCard property={property} />
-                    <button onClick={() => setSaved((current) => current.filter((item) => item.id !== property.id))}><Trash2 size={16} /> Remove</button>
-                  </div>
-                ))}
-              </div>
+              {savedError && <p className="dashboard-state"><AlertCircle size={18} /> {savedError}</p>}
+              {savedLoading ? (
+                <p className="dashboard-state"><Loader2 size={18} className="dashboard-spin" /> Loading saved properties...</p>
+              ) : filteredSaved.length === 0 ? (
+                <p className="dashboard-state"><Heart size={18} /> You haven't saved any properties yet. <a href="/properties">Browse properties</a>.</p>
+              ) : (
+                <div className="dashboard-property-grid">
+                  {filteredSaved.map((property) => (
+                    <div key={property._id} className="dashboard-saved-item">
+                      <PropertyCard property={toPropertyCardShape(property)} />
+                      <button onClick={() => toggleFavorite(property._id).then(() => setSaved((current) => current.filter((item) => item._id !== property._id)))}>
+                        <Trash2 size={16} /> Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Panel>
           )}
 
           {activeTab === "recent" && (
             <Panel title="Recently Viewed" description="Continue browsing properties you recently opened.">
               <div className="dashboard-property-grid">{demoProperties.slice(2, 5).map((property) => <PropertyCard key={property.id} property={property} />)}</div>
-            </Panel>
-          )}
-
-          {activeTab === "compare" && (
-            <Panel title="Compare Properties" description="Compare key facts and pricing side by side.">
-              <div className="compare-table">
-                <table><thead><tr><th>Property</th><th>Price</th><th>Beds</th><th>Baths</th><th>Area</th></tr></thead><tbody>{demoProperties.slice(0, 3).map((item) => <tr key={item.id}><td>{item.title}</td><td>{item.price}</td><td>{item.beds}</td><td>{item.baths}</td><td>{item.area}</td></tr>)}</tbody></table>
-              </div>
             </Panel>
           )}
 
@@ -164,8 +196,8 @@ function UserDashboardPage() {
   );
 }
 
-function Overview({ setActiveTab }) {
-  const stats = [["Saved", "12", Heart], ["Appointments", "2", CalendarDays], ["Messages", "3", MessageCircle], ["Views", "1.2k", Eye]];
+function Overview({ setActiveTab, savedCount }) {
+  const stats = [["Saved", String(savedCount), Heart], ["Appointments", "2", CalendarDays], ["Messages", "3", MessageCircle], ["Views", "1.2k", Eye]];
   return (
     <Panel title="Dashboard Overview" description="Quick insights and shortcuts.">
       <div className="dashboard-stats">{stats.map(([label, value, Icon]) => <button key={label} onClick={() => setActiveTab(label.toLowerCase() === "views" ? "recent" : label.toLowerCase())}><Icon size={22} /><strong>{value}</strong><span>{label}</span></button>)}</div>

@@ -26,6 +26,7 @@ export const formatPropertyArea = (property) => {
  * the shape the demo-data-era <PropertyCard /> component expects.
  */
 export const toPropertyCardShape = (property) => ({
+  _id: property._id,
   id: property.slug,
   title: property.title,
   price: formatPropertyPrice(property),

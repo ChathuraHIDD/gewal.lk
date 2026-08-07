@@ -13,15 +13,41 @@ import {
   SlidersHorizontal,
   Star,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../../hooks/useAuth.js";
+import { useFavorites } from "../../../hooks/useFavorites.js";
 
 import "./PropertyCard.css";
 
 function PropertyCard({ property, view = "grid", onCompare }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const { isSaved, toggle } = useFavorites();
+
   const images = property.images?.length ? property.images : [property.image];
   const [imageIndex, setImageIndex] = useState(0);
-  const [saved, setSaved] = useState(false);
+  const [localSaved, setLocalSaved] = useState(false);
   const [compared, setCompared] = useState(false);
+
+  const saved = property._id ? isSaved(property._id) : localSaved;
+
+  const handleSave = (event) => {
+    event.preventDefault();
+
+    if (!property._id) {
+      setLocalSaved((value) => !value);
+      return;
+    }
+
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    toggle(property._id).catch(() => {});
+  };
 
   const changeImage = (event, direction) => {
     event.preventDefault();
@@ -59,10 +85,7 @@ function PropertyCard({ property, view = "grid", onCompare }) {
           type="button"
           aria-label={saved ? "Remove saved property" : "Save property"}
           className={saved ? "market-property-card__save is-active" : "market-property-card__save"}
-          onClick={(event) => {
-            event.preventDefault();
-            setSaved((value) => !value);
-          }}
+          onClick={handleSave}
         >
           <Heart size={19} fill={saved ? "currentColor" : "none"} />
         </button>

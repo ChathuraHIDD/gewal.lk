@@ -30,6 +30,7 @@ import {
 
 import PropertyCard from "../../../components/property/PropertyCard/PropertyCard.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { useFavorites } from "../../../hooks/useFavorites.js";
 import { createAppointment, getAppointmentAvailability } from "../../../services/appointmentService.js";
 import { getProperties, getPropertyBySlug, resolveMediaUrl } from "../../../services/propertyService.js";
 import { APPOINTMENT_SLOT_VALUES, slotLabel } from "../../../utils/appointmentSlots.js";
@@ -56,6 +57,7 @@ function PropertiesPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const { isSaved, toggle: toggleFavorite } = useFavorites();
 
   const [property, setProperty] = useState(null);
   const [related, setRelated] = useState([]);
@@ -94,7 +96,6 @@ function PropertiesPage() {
   }, [slug]);
 
   const [activeImage, setActiveImage] = useState(0);
-  const [saved, setSaved] = useState(false);
   const [compared, setCompared] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [tourDate, setTourDate] = useState(todayIso);
@@ -166,6 +167,19 @@ function PropertiesPage() {
     if (nextFreeSlot) setTourTime(nextFreeSlot);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFixedSchedule, fixedSlots, bookedTimes]);
+
+  const saved = property ? isSaved(property._id) : false;
+
+  const handleSave = () => {
+    if (!property) return;
+
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    toggleFavorite(property._id).catch(() => {});
+  };
 
   const handleShare = async () => {
     if (!property) return;
@@ -260,7 +274,7 @@ function PropertiesPage() {
           <div className="property-detail__actions">
             <button type="button" onClick={handleShare}><Share2 size={18} /> Share</button>
             <button type="button" className={compared ? "is-active" : ""} onClick={() => setCompared((value) => !value)}><SlidersHorizontal size={18} /> Compare</button>
-            <button type="button" className={saved ? "is-active" : ""} onClick={() => setSaved((value) => !value)}><Heart size={18} fill={saved ? "currentColor" : "none"} /> Save</button>
+            <button type="button" className={saved ? "is-active" : ""} onClick={handleSave}><Heart size={18} fill={saved ? "currentColor" : "none"} /> Save</button>
           </div>
         </div>
 

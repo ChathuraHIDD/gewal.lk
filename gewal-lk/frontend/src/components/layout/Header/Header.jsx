@@ -224,7 +224,7 @@ function Header() {
       <nav className="market-bottom-nav" aria-label="Mobile bottom navigation">
         <Link to="/"><Home size={19} />Home</Link>
         <Link to="/properties"><Search size={19} />Search</Link>
-        <Link to="/properties"><Heart size={19} />Saved</Link>
+        <Link to="/dashboard?tab=saved"><Heart size={19} />Saved</Link>
         <Link to="/dashboard"><MessageCircle size={19} />Messages</Link>
         <Link to="/dashboard"><UserRound size={19} />Profile</Link>
       </nav>
@@ -334,8 +334,8 @@ function ProfileMenu({ user, isAuthenticated, logout }) {
           <small>{isAuthenticated ? roleLabel(user) : "Sign in to manage your account"}</small>
         </div>
       </div>
-      <Link to="/properties"><Heart size={17} /> Saved Properties</Link>
-      <Link to="/properties"><SlidersHorizontal size={17} /> Compare Properties</Link>
+      <Link to="/dashboard?tab=saved"><Heart size={17} /> Saved Properties</Link>
+      <Link to="/compare"><SlidersHorizontal size={17} /> Compare Properties</Link>
       <Link to="/messages"><MessageCircle size={17} /> Messages <em>3</em></Link>
       <Link to="/appointments"><CalendarDays size={17} /> Appointments</Link>
       <Link to="/dashboard"><UserRound size={17} /> Dashboard</Link>

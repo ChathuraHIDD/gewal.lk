@@ -23,6 +23,7 @@ import CommercialPage from "./pages/commercial/CommercialPage/CommercialPage.jsx
 import MessagesPage from "./pages/messages/MessagesPage/MessagesPage.jsx";
 import AppointmentsPage from "./pages/appointments/AppointmentsPage/AppointmentsPage.jsx";
 import NotificationsPage from "./pages/notifications/NotificationsPage/NotificationsPage.jsx";
+import ComparePage from "./pages/compare/ComparePage/ComparePage.jsx";
 
 import LoginPage from "./pages/auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage/RegisterPage.jsx";
@@ -112,6 +113,7 @@ function App() {
         <Route path="/dashboard" element={<UserDashboardPage />} />
         <Route path="/messages" element={<MessagesPage />} />
         <Route path="/appointments" element={<AppointmentsPage />} />
+        <Route path="/compare" element={<ComparePage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route
           path="/admin"

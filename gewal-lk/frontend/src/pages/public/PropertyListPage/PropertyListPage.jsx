@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AlertCircle,
   Circle,
   Grid2X2,
+  Heart,
   List,
   Loader2,
   Mail,
@@ -13,6 +14,8 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
+import { useAuth } from "../../../hooks/useAuth.js";
+import { useFavorites } from "../../../hooks/useFavorites.js";
 import { getProperties, resolveMediaUrl } from "../../../services/propertyService.js";
 import {
   formatPropertyArea as formatArea,
@@ -26,6 +29,11 @@ const propertyTypes = ["House", "Apartment", "Land", "Commercial"];
 const bedroomFilters = ["1+", "2+", "3+", "4+"];
 
 function PropertyListPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const { isSaved, toggle: toggleFavorite } = useFavorites();
+
   const [view, setView] = useState("grid");
   const [sortBy, setSortBy] = useState("Newest");
   const [query, setQuery] = useState("");
@@ -74,6 +82,17 @@ function PropertyListPage() {
     setSelectedBeds(null);
     setQuery("");
     setSortBy("Newest");
+  };
+
+  const handleSave = (event, property) => {
+    event.preventDefault();
+
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    toggleFavorite(property._id).catch(() => {});
   };
 
   return (
@@ -160,6 +179,14 @@ function PropertyListPage() {
                     <div className="minimal-property-card__image">
                       <img src={resolveMediaUrl(property.coverImage) || placeholderImage} alt={property.title} />
                       <span>For {property.listingType}</span>
+                      <button
+                        type="button"
+                        className={isSaved(property._id) ? "minimal-property-card__save is-active" : "minimal-property-card__save"}
+                        aria-label={isSaved(property._id) ? "Remove saved property" : "Save property"}
+                        onClick={(event) => handleSave(event, property)}
+                      >
+                        <Heart size={18} fill={isSaved(property._id) ? "currentColor" : "none"} />
+                      </button>
                     </div>
                     <div className="minimal-property-card__body">
                       <div>

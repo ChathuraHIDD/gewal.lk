@@ -17,3 +17,23 @@ export const deleteAdmin = async (adminId) => {
 
   return response.data;
 };
+
+export const getAdminProperties = async (approvalStatus) => {
+  const response = await apiClient.get("/admin/properties", {
+    params: approvalStatus ? { approvalStatus } : undefined,
+  });
+
+  return response.data;
+};
+
+export const approveAdminProperty = async (propertyId) => {
+  const response = await apiClient.patch(`/admin/properties/${propertyId}/approve`);
+
+  return response.data;
+};
+
+export const rejectAdminProperty = async (propertyId) => {
+  const response = await apiClient.patch(`/admin/properties/${propertyId}/reject`);
+
+  return response.data;
+};

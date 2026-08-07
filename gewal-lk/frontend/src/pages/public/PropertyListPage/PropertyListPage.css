@@ -20,3 +20,13 @@
 .minimal-breadcrumb span:last-child {
   color: #171713;
 }
+
+.minimal-spin {
+  animation: minimal-spin 0.8s linear infinite;
+}
+
+@keyframes minimal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

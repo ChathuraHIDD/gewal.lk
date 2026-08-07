@@ -7,6 +7,11 @@ import {
   listAdmins,
 } from "./admin.service.js";
 
+import {
+  listPropertiesForAdmin,
+  setPropertyApprovalStatus,
+} from "../property/property.service.js";
+
 export const getAdmins = asyncHandler(async (request, response) => {
   const admins = await listAdmins();
 
@@ -41,6 +46,50 @@ export const deleteAdmin = asyncHandler(async (request, response) => {
     new ApiResponse({
       statusCode: 200,
       message: "Admin account deleted successfully",
+    })
+  );
+});
+
+export const listProperties = asyncHandler(async (request, response) => {
+  const properties = await listPropertiesForAdmin({
+    approvalStatus: request.query.approvalStatus,
+  });
+
+  return response.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      message: "Properties retrieved successfully",
+      data: { properties },
+    })
+  );
+});
+
+export const approveProperty = asyncHandler(async (request, response) => {
+  const property = await setPropertyApprovalStatus({
+    propertyId: request.params.id,
+    approvalStatus: "Approved",
+  });
+
+  return response.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      message: "Property approved and published",
+      data: { property },
+    })
+  );
+});
+
+export const rejectProperty = asyncHandler(async (request, response) => {
+  const property = await setPropertyApprovalStatus({
+    propertyId: request.params.id,
+    approvalStatus: "Rejected",
+  });
+
+  return response.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      message: "Property rejected",
+      data: { property },
     })
   );
 });

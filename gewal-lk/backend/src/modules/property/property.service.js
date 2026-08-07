@@ -127,7 +127,7 @@ export const createProperty = async ({ ownerId, payload, files }) => {
   }
 };
 
-const attachRelations = async (properties) => {
+export const attachRelations = async (properties) => {
   const propertyIds = properties.map((property) => property._id);
 
   const [locations, coverImages] = await Promise.all([
@@ -228,6 +228,53 @@ export const listMyProperties = async (ownerId) => {
   const properties = await Property.find({ ownerId }).sort({ createdAt: -1 });
 
   return attachRelations(properties);
+};
+
+/**
+ * List every property for admin moderation, optionally
+ * filtered by approval status.
+ */
+export const listPropertiesForAdmin = async ({ approvalStatus } = {}) => {
+  const filter = {};
+
+  if (approvalStatus) {
+    filter.approvalStatus = approvalStatus;
+  }
+
+  const properties = await Property.find(filter).sort({ createdAt: -1 });
+
+  return attachRelations(properties);
+};
+
+/**
+ * Approve or reject a submitted property listing.
+ *
+ * Approving moves the listing to "Published" so it becomes
+ * visible on the public site; rejecting keeps it hidden.
+ */
+export const setPropertyApprovalStatus = async ({
+  propertyId,
+  approvalStatus,
+}) => {
+  const property = await Property.findByIdAndUpdate(
+    propertyId,
+    {
+      approvalStatus,
+      status: approvalStatus === "Approved" ? "Published" : "Rejected",
+      publishedAt: approvalStatus === "Approved" ? new Date() : null,
+    },
+    { new: true }
+  );
+
+  if (!property) {
+    throw new ApiError({
+      statusCode: 404,
+      message: "Property not found",
+      code: "PROPERTY_NOT_FOUND",
+    });
+  }
+
+  return property;
 };
 
 /**

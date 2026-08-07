@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  AlertCircle,
   Circle,
   Grid2X2,
   List,
+  Loader2,
   Mail,
   MapPin,
   Phone,
@@ -11,12 +13,17 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-import { demoProperties } from "../../../data/demoProperties.js";
+import { getProperties, resolveMediaUrl } from "../../../services/propertyService.js";
+import {
+  formatPropertyArea as formatArea,
+  formatPropertyLocation as formatLocation,
+  formatPropertyPrice as formatPrice,
+  placeholderPropertyImage as placeholderImage,
+} from "../../../utils/propertyFormat.js";
 import "./PropertyListPage.css";
 
 const propertyTypes = ["House", "Apartment", "Land", "Commercial"];
 const bedroomFilters = ["1+", "2+", "3+", "4+"];
-const getNumericPrice = (price) => Number(String(price).replace(/[^0-9]/g, "")) || 0;
 
 function PropertyListPage() {
   const [view, setView] = useState("grid");
@@ -25,19 +32,42 @@ function PropertyListPage() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedBeds, setSelectedBeds] = useState(null);
 
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    getProperties({ limit: 48 })
+      .then((result) => {
+        if (!cancelled) setProperties(result.data.properties);
+      })
+      .catch((requestError) => {
+        if (!cancelled) setError(requestError.message || "Failed to load properties.");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const filteredProperties = useMemo(() => {
-    let results = demoProperties.filter((property) => {
-      const matchesQuery = `${property.title} ${property.location}`.toLowerCase().includes(query.toLowerCase());
+    let results = properties.filter((property) => {
+      const matchesQuery = `${property.title} ${formatLocation(property)}`.toLowerCase().includes(query.toLowerCase());
       const matchesType = !selectedType || property.propertyType === selectedType || (selectedType === "Commercial" && ["Office", "Shop", "Warehouse"].includes(property.propertyType));
-      const matchesBeds = !selectedBeds || Number(property.beds || 0) >= Number(selectedBeds.replace("+", ""));
+      const matchesBeds = !selectedBeds || Number(property.bedrooms || 0) >= Number(selectedBeds.replace("+", ""));
       return matchesQuery && matchesType && matchesBeds;
     });
 
-    if (sortBy === "Price Low") results = results.sort((a, b) => getNumericPrice(a.price) - getNumericPrice(b.price));
-    if (sortBy === "Price High") results = results.sort((a, b) => getNumericPrice(b.price) - getNumericPrice(a.price));
-    if (sortBy === "Newest") results = [...results].reverse();
+    if (sortBy === "Price Low") results = results.sort((a, b) => Number(a.price) - Number(b.price));
+    if (sortBy === "Price High") results = results.sort((a, b) => Number(b.price) - Number(a.price));
+    if (sortBy === "Newest") results = [...results].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return results;
-  }, [query, selectedBeds, selectedType, sortBy]);
+  }, [properties, query, selectedBeds, selectedType, sortBy]);
 
   const clearFilters = () => {
     setSelectedType(null);
@@ -105,44 +135,52 @@ function PropertyListPage() {
             <button type="submit">Search</button>
           </form>
 
-          <div className="minimal-results-toolbar">
-            <p>Showing {filteredProperties.length} of {demoProperties.length}</p>
-            <div>
-              <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} aria-label="Sort listings">
-                <option>Newest</option>
-                <option>Price Low</option>
-                <option>Price High</option>
-              </select>
-              <button type="button" className={view === "grid" ? "is-active" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={17} /></button>
-              <button type="button" className={view === "list" ? "is-active" : ""} onClick={() => setView("list")} aria-label="List view"><List size={17} /></button>
-            </div>
-          </div>
+          {error && <p className="minimal-empty" style={{ padding: "16px 0" }}><AlertCircle size={17} /> {error}</p>}
 
-          <div className={view === "grid" ? "minimal-property-grid" : "minimal-property-grid is-list"}>
-            {filteredProperties.map((property) => (
-              <Link to={`/properties/${property.id}`} className="minimal-property-card" key={property.id}>
-                <div className="minimal-property-card__image">
-                  <img src={property.image} alt={property.title} />
-                  <span>For {property.listingType}</span>
+          {isLoading ? (
+            <p className="minimal-empty" style={{ padding: "40px 0" }}><Loader2 size={18} className="minimal-spin" /> Loading properties...</p>
+          ) : (
+            <>
+              <div className="minimal-results-toolbar">
+                <p>Showing {filteredProperties.length} of {properties.length}</p>
+                <div>
+                  <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} aria-label="Sort listings">
+                    <option>Newest</option>
+                    <option>Price Low</option>
+                    <option>Price High</option>
+                  </select>
+                  <button type="button" className={view === "grid" ? "is-active" : ""} onClick={() => setView("grid")} aria-label="Grid view"><Grid2X2 size={17} /></button>
+                  <button type="button" className={view === "list" ? "is-active" : ""} onClick={() => setView("list")} aria-label="List view"><List size={17} /></button>
                 </div>
-                <div className="minimal-property-card__body">
-                  <div>
-                    <h2>{property.title.replace("Architect Designed ", "").replace(" With City Views", "")}</h2>
-                    <strong>{property.price}</strong>
-                  </div>
-                  <p>{property.location}</p>
-                  <small>{property.beds || "—"} beds · {property.baths || "—"} baths · {property.area}</small>
-                </div>
-              </Link>
-            ))}
-          </div>
+              </div>
 
-          {filteredProperties.length === 0 && (
-            <div className="minimal-empty">
-              <h2>No listings found</h2>
-              <p>Try another location or clear your filters.</p>
-              <button type="button" onClick={clearFilters}>Clear filters</button>
-            </div>
+              <div className={view === "grid" ? "minimal-property-grid" : "minimal-property-grid is-list"}>
+                {filteredProperties.map((property) => (
+                  <Link to={`/properties/${property.slug}`} className="minimal-property-card" key={property._id}>
+                    <div className="minimal-property-card__image">
+                      <img src={resolveMediaUrl(property.coverImage) || placeholderImage} alt={property.title} />
+                      <span>For {property.listingType}</span>
+                    </div>
+                    <div className="minimal-property-card__body">
+                      <div>
+                        <h2>{property.title}</h2>
+                        <strong>{formatPrice(property)}</strong>
+                      </div>
+                      <p>{formatLocation(property)}</p>
+                      <small>{property.bedrooms || "—"} beds · {property.bathrooms || "—"} baths · {formatArea(property)}</small>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {filteredProperties.length === 0 && (
+                <div className="minimal-empty">
+                  <h2>No listings found</h2>
+                  <p>Try another location or clear your filters.</p>
+                  <button type="button" onClick={clearFilters}>Clear filters</button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

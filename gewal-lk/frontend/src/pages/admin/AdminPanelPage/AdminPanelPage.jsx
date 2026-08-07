@@ -28,12 +28,14 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { demoProperties } from "../../../data/demoProperties.js";
 import { useAuth } from "../../../hooks/useAuth.js";
 import {
+  approveAdminProperty,
   createAdmin,
   deleteAdmin,
+  getAdminProperties,
   getAdmins,
+  rejectAdminProperty,
 } from "../../../services/adminService.js";
 import "./AdminPanelPage.css";
 
@@ -69,26 +71,68 @@ const reportsSeed = [
   { id: 2, property: "Residential Land", reason: "Duplicate", status: "Pending" },
 ];
 
+function useAdminProperties() {
+  const [properties, setProperties] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [actioningId, setActioningId] = useState(null);
+
+  const loadProperties = () => {
+    setIsLoading(true);
+    getAdminProperties()
+      .then((result) => setProperties(result.data.properties))
+      .catch((requestError) => setError(requestError.message || "Failed to load properties."))
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    loadProperties();
+  }, []);
+
+  const decide = async (propertyId, decisionFn) => {
+    setError("");
+    setActioningId(propertyId);
+
+    try {
+      await decisionFn(propertyId);
+      loadProperties();
+    } catch (requestError) {
+      setError(requestError.message || "Failed to update the property.");
+    } finally {
+      setActioningId(null);
+    }
+  };
+
+  return {
+    properties,
+    isLoading,
+    error,
+    actioningId,
+    approve: (propertyId) => decide(propertyId, approveAdminProperty),
+    reject: (propertyId) => decide(propertyId, rejectAdminProperty),
+  };
+}
+
 function AdminPanelPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [users, setUsers] = useState(usersSeed);
-  const [properties, setProperties] = useState(demoProperties.map((item, index) => ({ ...item, approval: index % 2 ? "Pending" : "Approved" })));
   const [reports, setReports] = useState(reportsSeed);
   const [query, setQuery] = useState("");
+
+  const {
+    properties,
+    isLoading: propertiesLoading,
+    error: propertiesError,
+    actioningId,
+    approve: approveProperty,
+    reject: rejectProperty,
+  } = useAdminProperties();
 
   const filteredUsers = useMemo(
     () => users.filter((user) => user.name.toLowerCase().includes(query.toLowerCase()) || user.email.toLowerCase().includes(query.toLowerCase())),
     [query, users]
   );
-
-  const approveProperty = (id) => {
-    setProperties((current) => current.map((item) => item.id === id ? { ...item, approval: "Approved" } : item));
-  };
-
-  const rejectProperty = (id) => {
-    setProperties((current) => current.map((item) => item.id === id ? { ...item, approval: "Rejected" } : item));
-  };
 
   return (
     <main className="admin-page">
@@ -135,18 +179,38 @@ function AdminPanelPage() {
             </Panel>
           )}
 
-          {activeTab === "properties" && <PropertiesPanel properties={properties} />}
+          {activeTab === "properties" && (
+            <PropertiesPanel
+              properties={properties}
+              isLoading={propertiesLoading}
+              error={propertiesError}
+            />
+          )}
 
           {activeTab === "approval" && (
             <Panel title="Property Approval" description="Approve or reject submitted listings.">
-              <DataTable columns={["Property", "Type", "Price", "Status", "Actions"]}>
-                {properties.filter((item) => item.approval === "Pending").map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.title}</td><td>{item.propertyType}</td><td>{item.price}</td><td><Status status={item.approval} /></td>
-                    <td><button onClick={() => approveProperty(item.id)}><CheckCircle2 size={15} /> Approve</button><button onClick={() => rejectProperty(item.id)}><XCircle size={15} /> Reject</button></td>
-                  </tr>
-                ))}
-              </DataTable>
+              {propertiesError && <p className="admin-state admin-state--error"><AlertCircle size={17} /> {propertiesError}</p>}
+              {propertiesLoading ? (
+                <p className="admin-state"><Loader2 size={17} className="admin-spin" /> Loading properties...</p>
+              ) : (
+                <DataTable columns={["Property", "Type", "Price", "Status", "Actions"]}>
+                  {properties.filter((item) => item.approvalStatus === "Pending").map((item) => (
+                    <tr key={item._id}>
+                      <td>{item.title}</td>
+                      <td>{item.propertyType}</td>
+                      <td>Rs. {Number(item.price).toLocaleString()}</td>
+                      <td><Status status={item.approvalStatus} /></td>
+                      <td>
+                        <button onClick={() => approveProperty(item._id)} disabled={actioningId === item._id}><CheckCircle2 size={15} /> Approve</button>
+                        <button onClick={() => rejectProperty(item._id)} disabled={actioningId === item._id}><XCircle size={15} /> Reject</button>
+                      </td>
+                    </tr>
+                  ))}
+                  {properties.filter((item) => item.approvalStatus === "Pending").length === 0 && (
+                    <tr><td colSpan={5}>No listings waiting for approval.</td></tr>
+                  )}
+                </DataTable>
+              )}
             </Panel>
           )}
 
@@ -272,8 +336,29 @@ function AdminsPanel({ currentUserId }) {
   );
 }
 
-function PropertiesPanel({ properties }) {
-  return <Panel title="Properties" description="View and moderate all property listings."><DataTable columns={["Image", "Title", "Type", "Price", "Approval", "Views"]}>{properties.map((item) => <tr key={item.id}><td><img src={item.image} alt="" className="admin-thumb" /></td><td>{item.title}</td><td>{item.propertyType}</td><td>{item.price}</td><td><Status status={item.approval} /></td><td><Eye size={15} /> 1.2k</td></tr>)}</DataTable></Panel>;
+function PropertiesPanel({ properties, isLoading, error }) {
+  return (
+    <Panel title="Properties" description="View and moderate all property listings.">
+      {error && <p className="admin-state admin-state--error"><AlertCircle size={17} /> {error}</p>}
+      {isLoading ? (
+        <p className="admin-state"><Loader2 size={17} className="admin-spin" /> Loading properties...</p>
+      ) : (
+        <DataTable columns={["Image", "Title", "Type", "Price", "Approval", "Views"]}>
+          {properties.map((item) => (
+            <tr key={item._id}>
+              <td><img src={item.coverImage || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=200&q=80"} alt="" className="admin-thumb" /></td>
+              <td>{item.title}</td>
+              <td>{item.propertyType}</td>
+              <td>Rs. {Number(item.price).toLocaleString()}</td>
+              <td><Status status={item.approvalStatus} /></td>
+              <td><Eye size={15} /> {item.viewsCount ?? 0}</td>
+            </tr>
+          ))}
+          {properties.length === 0 && <tr><td colSpan={6}>No properties yet.</td></tr>}
+        </DataTable>
+      )}
+    </Panel>
+  );
 }
 
 function GenericAdminPanel({ tab }) {

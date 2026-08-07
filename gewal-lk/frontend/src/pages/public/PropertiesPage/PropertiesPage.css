@@ -690,6 +690,125 @@
   font-weight: 800;
 }
 
+.tour-card__note {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.tour-card__note span {
+  color: #47474c;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.tour-card__note textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ececea;
+  border-radius: 10px;
+  color: #2d2d30;
+  background: #f6f6f3;
+  font: inherit;
+  font-weight: 650;
+  resize: vertical;
+  outline: 0;
+}
+
+.tour-card__note textarea:focus {
+  border-color: #0f8f84;
+}
+
+.tour-card__error {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 12px;
+  padding: 10px;
+  border-radius: 10px;
+  color: #b91c1c;
+  background: #fdeaea;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.tour-card__slot-select {
+  position: relative;
+}
+
+.tour-card__slot-select select {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #2d2d30;
+  font: inherit;
+  font-weight: 760;
+  appearance: none;
+  cursor: pointer;
+}
+
+.tour-card__slot-select option:disabled {
+  color: #b5b5ae;
+}
+
+.tour-card__hint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 14px;
+  color: #746f66;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.tour-card__hint--warn {
+  padding: 10px;
+  border-radius: 10px;
+  color: #b91c1c;
+  background: #fdeaea;
+  font-weight: 800;
+}
+
+.sidebar-card__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sidebar-card__primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.tour-card__success {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 22px 8px 6px;
+  text-align: center;
+  color: #0f8f84;
+}
+
+.tour-card__success strong {
+  color: #171717;
+  font-size: 1.05rem;
+}
+
+.tour-card__success p {
+  margin: 0 0 10px;
+  color: #47474c;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.tour-card__success .sidebar-card__secondary {
+  margin-top: 0;
+}
+
 .report-button {
   display: inline-flex;
   align-items: center;

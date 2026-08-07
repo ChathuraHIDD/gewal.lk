@@ -1,3 +1,4 @@
+import { APPOINTMENT_SLOT_MODES, APPOINTMENT_SLOT_VALUES } from "../../constants/appointment.constants.js";
 import { ApiError } from "../../utils/ApiError.js";
 
 const propertyTypes = [
@@ -30,7 +31,7 @@ const toBoolean = (value) => {
   return value === true || value === "true" || value === "1" || value === "on";
 };
 
-const parseAmenities = (value) => {
+const parseStringArray = (value) => {
   if (!value) {
     return [];
   }
@@ -66,6 +67,13 @@ export const validateCreateProperty = (request, response, next) => {
   const contactName = cleanString(request.body.contactName);
   const contactPhone = cleanString(request.body.contactPhone);
   const contactEmail = cleanString(request.body.contactEmail).toLowerCase();
+
+  const appointmentSlotMode =
+    cleanString(request.body.appointmentSlotMode) || APPOINTMENT_SLOT_MODES.FIXED;
+
+  const availableSlots = parseStringArray(request.body.availableSlots).filter((slot) =>
+    APPOINTMENT_SLOT_VALUES.includes(slot)
+  );
 
   const errors = [];
 
@@ -139,6 +147,20 @@ export const validateCreateProperty = (request, response, next) => {
     });
   }
 
+  if (!Object.values(APPOINTMENT_SLOT_MODES).includes(appointmentSlotMode)) {
+    errors.push({
+      field: "appointmentSlotMode",
+      message: "Select a valid appointment scheduling mode",
+    });
+  }
+
+  if (appointmentSlotMode === APPOINTMENT_SLOT_MODES.FIXED && availableSlots.length === 0) {
+    errors.push({
+      field: "availableSlots",
+      message: "Select at least one appointment time slot, or enable custom scheduling",
+    });
+  }
+
   const files = request.files || [];
 
   if (files.length > 10) {
@@ -190,7 +212,11 @@ export const validateCreateProperty = (request, response, next) => {
 
     videoUrl: cleanString(request.body.videoUrl) || null,
 
-    amenities: parseAmenities(request.body.amenities),
+    amenities: parseStringArray(request.body.amenities),
+
+    appointmentSlotMode,
+    availableSlots:
+      appointmentSlotMode === APPOINTMENT_SLOT_MODES.FIXED ? availableSlots : [],
   };
 
   return next();

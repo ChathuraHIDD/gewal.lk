@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   AlertCircle,
   Bath,
@@ -7,6 +7,7 @@ import {
   Building2,
   CalendarDays,
   Car,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Clock3,
@@ -28,7 +29,10 @@ import {
 } from "lucide-react";
 
 import PropertyCard from "../../../components/property/PropertyCard/PropertyCard.jsx";
+import { useAuth } from "../../../hooks/useAuth.js";
+import { createAppointment, getAppointmentAvailability } from "../../../services/appointmentService.js";
 import { getProperties, getPropertyBySlug, resolveMediaUrl } from "../../../services/propertyService.js";
+import { APPOINTMENT_SLOT_VALUES, slotLabel } from "../../../utils/appointmentSlots.js";
 import {
   formatPropertyArea,
   formatPropertyLocation,
@@ -45,8 +49,13 @@ const localCards = [
   ["https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80", "Green environment"],
 ];
 
+const todayIso = new Date().toISOString().slice(0, 10);
+
 function PropertiesPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const [property, setProperty] = useState(null);
   const [related, setRelated] = useState([]);
@@ -88,9 +97,13 @@ function PropertiesPage() {
   const [saved, setSaved] = useState(false);
   const [compared, setCompared] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
-  const [tourDate, setTourDate] = useState("2026-07-24");
+  const [tourDate, setTourDate] = useState(todayIso);
   const [tourTime, setTourTime] = useState("12:30");
+  const [tourNote, setTourNote] = useState("");
   const [appointmentSent, setAppointmentSent] = useState(false);
+  const [isBookingAppointment, setIsBookingAppointment] = useState(false);
+  const [appointmentError, setAppointmentError] = useState("");
+  const [bookedTimes, setBookedTimes] = useState([]);
   const [activeLocationTab, setActiveLocationTab] = useState("Map");
   const [downPayment, setDownPayment] = useState(20);
   const [years, setYears] = useState(20);
@@ -120,6 +133,40 @@ function PropertiesPage() {
     [Car, "Parking", `${property.parking || 0} spaces`],
   ] : [];
 
+  const isFixedSchedule = property?.appointmentSlotMode !== "Customizable";
+  const fixedSlots = property?.availableSlots?.length ? property.availableSlots : APPOINTMENT_SLOT_VALUES;
+  const allSlotsBooked = isFixedSchedule && fixedSlots.every((slot) => bookedTimes.includes(slot));
+
+  useEffect(() => {
+    if (!property || !isFixedSchedule) {
+      setBookedTimes([]);
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    getAppointmentAvailability(property._id, tourDate)
+      .then((result) => {
+        if (!cancelled) setBookedTimes(result.data.bookedSlots);
+      })
+      .catch(() => {
+        if (!cancelled) setBookedTimes([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [property, isFixedSchedule, tourDate]);
+
+  useEffect(() => {
+    if (!isFixedSchedule) return;
+    if (fixedSlots.includes(tourTime) && !bookedTimes.includes(tourTime)) return;
+
+    const nextFreeSlot = fixedSlots.find((slot) => !bookedTimes.includes(slot));
+    if (nextFreeSlot) setTourTime(nextFreeSlot);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFixedSchedule, fixedSlots, bookedTimes]);
+
   const handleShare = async () => {
     if (!property) return;
     const url = window.location.href;
@@ -131,9 +178,37 @@ function PropertiesPage() {
     window.alert("Property link copied to clipboard");
   };
 
-  const submitAppointment = (event) => {
+  const submitAppointment = async (event) => {
     event.preventDefault();
-    setAppointmentSent(true);
+
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    setAppointmentError("");
+    setIsBookingAppointment(true);
+
+    try {
+      await createAppointment({
+        propertyId: property._id,
+        appointmentDate: tourDate,
+        appointmentTime: tourTime,
+        message: tourNote,
+      });
+
+      setAppointmentSent(true);
+    } catch (requestError) {
+      setAppointmentError(requestError.message || "Failed to send your appointment request. Please try again.");
+
+      if (requestError.code === "SLOT_ALREADY_BOOKED" && isFixedSchedule) {
+        getAppointmentAvailability(property._id, tourDate)
+          .then((result) => setBookedTimes(result.data.bookedSlots))
+          .catch(() => {});
+      }
+    } finally {
+      setIsBookingAppointment(false);
+    }
   };
 
   if (isLoading) {
@@ -290,17 +365,51 @@ function PropertiesPage() {
           </div>
 
           <aside className="property-sidebar">
-            <form className="sidebar-card tour-card" onSubmit={submitAppointment}>
+            <div className="sidebar-card tour-card">
               <h3>Book Appointment</h3>
-              <p>Choose your preferred date and time.</p>
-              <div className="tour-card__fields">
-                <label><CalendarDays size={16} /><input type="date" value={tourDate} onChange={(e) => setTourDate(e.target.value)} /></label>
-                <label><Clock3 size={16} /><input type="time" value={tourTime} onChange={(e) => setTourTime(e.target.value)} /></label>
-              </div>
-              <button className="sidebar-card__primary" type="submit">Schedule a Tour</button>
-              {property.contactEmail && <a className="sidebar-card__secondary" href={`mailto:${property.contactEmail}`}><Mail size={16} /> Email Contact</a>}
-              {appointmentSent && <p className="appointment-success">Appointment request sent successfully.</p>}
-            </form>
+
+              {appointmentSent ? (
+                <div className="tour-card__success">
+                  <CheckCircle2 size={26} />
+                  <strong>Request sent</strong>
+                  <p>The listing contact has been notified for {new Date(tourDate).toLocaleDateString("en-LK", { year: "numeric", month: "long", day: "numeric" })} at {slotLabel(tourTime)}. They'll reach out to confirm.</p>
+                  <button type="button" className="sidebar-card__secondary" onClick={() => setAppointmentSent(false)}>Request another time</button>
+                </div>
+              ) : (
+                <form onSubmit={submitAppointment}>
+                  <p>Choose your preferred date and time. We'll notify the listing contact directly.</p>
+                  <div className="tour-card__fields">
+                    <label><CalendarDays size={16} /><input type="date" min={todayIso} value={tourDate} onChange={(e) => setTourDate(e.target.value)} required /></label>
+                    {isFixedSchedule ? (
+                      <label className="tour-card__slot-select">
+                        <Clock3 size={16} />
+                        <select value={tourTime} onChange={(e) => setTourTime(e.target.value)} required>
+                          {fixedSlots.map((slot) => (
+                            <option key={slot} value={slot} disabled={bookedTimes.includes(slot)}>
+                              {slotLabel(slot)}{bookedTimes.includes(slot) ? " — Booked" : ""}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    ) : (
+                      <label><Clock3 size={16} /><input type="time" value={tourTime} onChange={(e) => setTourTime(e.target.value)} required /></label>
+                    )}
+                  </div>
+                  {isFixedSchedule && allSlotsBooked && (
+                    <p className="tour-card__hint tour-card__hint--warn"><AlertCircle size={16} /> All time slots are booked on this date. Please try another date.</p>
+                  )}
+                  <label className="tour-card__note">
+                    <span>Note for the host (optional)</span>
+                    <textarea rows="3" value={tourNote} onChange={(e) => setTourNote(e.target.value)} placeholder="Anything they should know before your visit" />
+                  </label>
+                  {appointmentError && <p className="tour-card__error"><AlertCircle size={16} /> {appointmentError}</p>}
+                  <button className="sidebar-card__primary" type="submit" disabled={isBookingAppointment || allSlotsBooked}>
+                    {isBookingAppointment ? <Loader2 size={17} className="spin" /> : <CalendarDays size={17} />}
+                    {isBookingAppointment ? "Sending request..." : "Request Appointment"}
+                  </button>
+                </form>
+              )}
+            </div>
 
             <div className="sidebar-card agent-card">
               <h3>Listing Contact</h3>

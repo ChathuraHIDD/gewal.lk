@@ -17,6 +17,7 @@ import {
 
 import { useAuth } from "../../../hooks/useAuth.js";
 import { createProperty } from "../../../services/propertyService.js";
+import { APPOINTMENT_SLOTS, APPOINTMENT_SLOT_VALUES } from "../../../utils/appointmentSlots.js";
 
 import "./PostPropertyPage.css";
 
@@ -47,6 +48,7 @@ const initialForm = {
   contactEmail: "",
   seoTitle: "",
   seoDescription: "",
+  appointmentSlotMode: "Fixed",
 };
 
 const requiredFieldsByStep = [
@@ -71,6 +73,8 @@ const fieldToStep = {
   contactName: 5,
   contactPhone: 5,
   contactEmail: 5,
+  appointmentSlotMode: 5,
+  availableSlots: 5,
 };
 
 function PostPropertyPage() {
@@ -92,6 +96,7 @@ function PostPropertyPage() {
   }, [user]);
 
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [selectedSlots, setSelectedSlots] = useState(APPOINTMENT_SLOT_VALUES);
   const [images, setImages] = useState([]);
   const [published, setPublished] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,6 +113,10 @@ function PostPropertyPage() {
 
   const toggleAmenity = (item) => {
     setSelectedAmenities((current) => current.includes(item) ? current.filter((value) => value !== item) : [...current, item]);
+  };
+
+  const toggleSlot = (slot) => {
+    setSelectedSlots((current) => current.includes(slot) ? current.filter((value) => value !== slot) : [...current, slot]);
   };
 
   const handleImages = (event) => {
@@ -138,6 +147,10 @@ function PostPropertyPage() {
 
     if (!(Number(form.price) > 0)) {
       return { step: 2, message: "Enter a valid price greater than zero." };
+    }
+
+    if (form.appointmentSlotMode === "Fixed" && selectedSlots.length === 0) {
+      return { step: 5, message: "Select at least one appointment time slot, or enable custom scheduling." };
     }
 
     return null;
@@ -182,6 +195,9 @@ function PostPropertyPage() {
     payload.append("videoUrl", form.videoUrl);
 
     payload.append("amenities", JSON.stringify(selectedAmenities));
+
+    payload.append("appointmentSlotMode", form.appointmentSlotMode);
+    payload.append("availableSlots", JSON.stringify(selectedSlots));
 
     images.forEach((image) => payload.append("images", image.file));
 
@@ -299,6 +315,41 @@ function PostPropertyPage() {
                 <Step title="Contact & SEO" description="Add contact and SEO details.">
                   <div className="post-grid-2"><Field label="Contact name"><input name="contactName" value={form.contactName} onChange={updateField} /></Field><Field label="Contact phone"><input name="contactPhone" value={form.contactPhone} onChange={updateField} /></Field></div>
                   <Field label="Contact email"><input name="contactEmail" value={form.contactEmail} onChange={updateField} /></Field>
+
+                  <div className="post-field">
+                    <span>Appointment scheduling</span>
+                    <label className="post-check">
+                      <input
+                        type="checkbox"
+                        checked={form.appointmentSlotMode === "Customizable"}
+                        onChange={(event) =>
+                          setForm((current) => ({
+                            ...current,
+                            appointmentSlotMode: event.target.checked ? "Customizable" : "Fixed",
+                          }))
+                        }
+                      />
+                      Let visitors request any custom time (instead of fixed slots)
+                    </label>
+                  </div>
+
+                  {form.appointmentSlotMode === "Fixed" && (
+                    <Field label="Available time slots">
+                      <div className="amenity-selector">
+                        {APPOINTMENT_SLOTS.map((slot) => (
+                          <button
+                            key={slot.value}
+                            type="button"
+                            className={selectedSlots.includes(slot.value) ? "is-active" : ""}
+                            onClick={() => toggleSlot(slot.value)}
+                          >
+                            {slot.label}
+                          </button>
+                        ))}
+                      </div>
+                    </Field>
+                  )}
+
                   <Field label="SEO title"><input name="seoTitle" value={form.seoTitle} onChange={updateField} placeholder="Luxury villa for sale in Colombo" /></Field>
                   <Field label="SEO description"><textarea name="seoDescription" value={form.seoDescription} onChange={updateField} rows="3" /></Field>
                 </Step>

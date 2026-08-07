@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { APPOINTMENT_SLOT_VALUES } from "../constants/appointment.constants.js";
+
 const { Schema } = mongoose;
 const objectId = Schema.Types.ObjectId;
 
@@ -114,6 +116,16 @@ const propertySchema = new Schema(
     featured: { type: Boolean, default: false, index: true },
     premium: { type: Boolean, default: false, index: true },
     urgentSale: { type: Boolean, default: false, index: true },
+    appointmentSlotMode: {
+      type: String,
+      enum: ["Fixed", "Customizable"],
+      default: "Fixed",
+    },
+    availableSlots: {
+      type: [String],
+      enum: APPOINTMENT_SLOT_VALUES,
+      default: APPOINTMENT_SLOT_VALUES,
+    },
     publishedAt: { type: Date, default: null, index: true },
     expiresAt: { type: Date, default: null, index: true },
   },
@@ -228,6 +240,20 @@ const appointmentSchema = new Schema(
     cancelReason: { type: String, trim: true, default: null },
   },
   schemaOptions("appointments")
+);
+
+/*
+ * Prevent two active appointments from ever holding the same
+ * property + date + time slot, even under concurrent requests.
+ */
+appointmentSchema.index(
+  { propertyId: 1, appointmentDate: 1, appointmentTime: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      status: { $in: ["Pending", "Accepted", "Completed"] },
+    },
+  }
 );
 
 const agentReviewSchema = new Schema(

@@ -1,47 +1,10 @@
 import { environment } from "../../config/environment.js";
-import { getEmailTransporter } from "../../config/email.js";
+import { sendEmail } from "../../utils/mailer.js";
 
 import {
   emailVerificationTemplate,
   passwordResetTemplate,
 } from "./authEmail.templates.js";
-
-const sendEmail = async ({
-  to,
-  subject,
-  text,
-  html,
-}) => {
-  /*
-   * Development mode:
-   * Do not connect to SMTP.
-   */
-  if (!environment.email.enabled) {
-    console.log(
-      `[Development email skipped] Recipient: ${to} | Subject: ${subject}`
-    );
-
-    return {
-      skipped: true,
-    };
-  }
-
-  /*
-   * Production or SMTP-enabled mode.
-   */
-  const transporter = getEmailTransporter();
-
-  return transporter.sendMail({
-    from: {
-      name: environment.email.fromName,
-      address: environment.email.fromAddress,
-    },
-    to,
-    subject,
-    text,
-    html,
-  });
-};
 
 export const sendVerificationOtpEmail = async ({
   user,

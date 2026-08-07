@@ -74,6 +74,8 @@ export const createProperty = async ({ ownerId, payload, files }) => {
             contactEmail: payload.contactEmail,
             seoTitle: payload.seoTitle,
             seoDescription: payload.seoDescription,
+            appointmentSlotMode: payload.appointmentSlotMode,
+            availableSlots: payload.availableSlots,
           },
         ],
         { session }

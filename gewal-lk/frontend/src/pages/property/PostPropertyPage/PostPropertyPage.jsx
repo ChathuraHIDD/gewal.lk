@@ -59,6 +59,20 @@ const requiredFieldsByStep = [
   [],
 ];
 
+const fieldToStep = {
+  title: 0,
+  description: 0,
+  propertyType: 0,
+  listingType: 0,
+  district: 1,
+  city: 1,
+  price: 2,
+  images: 3,
+  contactName: 5,
+  contactPhone: 5,
+  contactEmail: 5,
+};
+
 function PostPropertyPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -106,28 +120,36 @@ function PostPropertyPage() {
   const nextStep = () => setStep((value) => Math.min(steps.length - 1, value + 1));
   const prevStep = () => setStep((value) => Math.max(0, value - 1));
 
-  const findFirstInvalidStep = () => {
+  const findFirstInvalidField = () => {
     for (let index = 0; index < requiredFieldsByStep.length; index += 1) {
-      const missing = requiredFieldsByStep[index].some((field) => !String(form[field] || "").trim());
-      if (missing) {
-        return index;
+      const emptyField = requiredFieldsByStep[index].find((field) => !String(form[field] || "").trim());
+      if (emptyField) {
+        return { step: index, message: "Please fill in all required fields before publishing." };
       }
     }
 
-    if (!(Number(form.price) > 0)) {
-      return 2;
+    if (form.title.trim().length < 5) {
+      return { step: 0, message: "Property title must be at least 5 characters." };
     }
 
-    return -1;
+    if (form.description.trim().length < 20) {
+      return { step: 0, message: "Description must be at least 20 characters." };
+    }
+
+    if (!(Number(form.price) > 0)) {
+      return { step: 2, message: "Enter a valid price greater than zero." };
+    }
+
+    return null;
   };
 
   const publish = async () => {
     setSubmitError("");
 
-    const invalidStep = findFirstInvalidStep();
-    if (invalidStep !== -1) {
-      setStep(invalidStep);
-      setSubmitError("Please fill in all required fields before publishing.");
+    const invalid = findFirstInvalidField();
+    if (invalid) {
+      setStep(invalid.step);
+      setSubmitError(invalid.message);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -169,7 +191,18 @@ function PostPropertyPage() {
       setPublished(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
-      setSubmitError(error.message || "Failed to publish property. Please try again.");
+      const fieldMessages = (error.errors || []).map((item) => item.message).filter(Boolean);
+      setSubmitError(
+        fieldMessages.length > 0
+          ? fieldMessages.join(" ")
+          : error.message || "Failed to publish property. Please try again."
+      );
+
+      const firstErrorField = error.errors?.[0]?.field;
+      if (firstErrorField && fieldToStep[firstErrorField] !== undefined) {
+        setStep(fieldToStep[firstErrorField]);
+      }
+
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setIsSubmitting(false);
